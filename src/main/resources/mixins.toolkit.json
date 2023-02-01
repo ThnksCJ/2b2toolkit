@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.cj.toolkit.mixin.mixins",
+  "refmap": "mixins.toolkit.refmap.json",
+  "mixins": [
+    "MixinEntityPlayerSP",
+    "MixinMathHelper",
+    "MixinNetworkManager",
+    "MixinPlayerControllerMP"
+  ],
+  "client": [
+    "MixinBlockRendererDispatcher",
+    "MixinRenderTNTPrimed"
+  ]
+}

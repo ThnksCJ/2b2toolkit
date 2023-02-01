@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "2b2toolkit",
+    "name": "2b2toolkit",
+    "description": "Some toolkit for 2b2t.org",
+    "version": "v0.3",
+    "mcversion": "1.12.2",
+    "logoFile": "image.png",
+    "updateJSON": "",
+    "authorList": [
+      "Thnks_CJ",
+
+    ]
+  }
+]
