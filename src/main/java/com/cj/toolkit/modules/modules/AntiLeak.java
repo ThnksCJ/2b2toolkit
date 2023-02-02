@@ -3,13 +3,11 @@ package com.cj.toolkit.modules.modules;
 import com.cj.toolkit.modules.Category;
 import com.cj.toolkit.modules.Module;
 import com.cj.toolkit.setting.settings.BooleanSetting;
-import com.cj.toolkit.setting.settings.DoubleSetting;
 import com.cj.toolkit.setting.settings.IntegerSetting;
-import com.cj.toolkit.setting.settings.StringSetting;
+import com.cj.toolkit.util.entity.PlayerUtil;
 import kaptainwutax.biomeutils.source.BiomeSource;
 import kaptainwutax.mcutils.state.Dimension;
 import kaptainwutax.mcutils.version.MCVersion;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -44,6 +42,8 @@ public class AntiLeak extends Module {
 
     @Override
     public void onEnable() {
+        if(PlayerUtil.nullcheck()) return;
+
         sync();
         reload(true);
     }
@@ -55,8 +55,8 @@ public class AntiLeak extends Module {
 
     @Override
     public void onUpdate() {
-        if(Minecraft.getMinecraft().player.dimension != lastDim) {
-            lastDim = Minecraft.getMinecraft().player.dimension;
+        if(mc.player.dimension != lastDim) {
+            lastDim = mc.player.dimension;
             sync();
         }
 
@@ -95,7 +95,10 @@ public class AntiLeak extends Module {
     }
 
     public static void sync() {
-        if (Minecraft.getMinecraft().player.dimension == 0) {
+        if(PlayerUtil.nullcheck())
+            return;
+
+        if (mc.player.dimension == 0) {
             biomeSource = BiomeSource.of(dimension, version, worldSeedOverworld);
         } else {
             biomeSource = BiomeSource.of(dimension, version, worldSeedNether);
@@ -104,9 +107,11 @@ public class AntiLeak extends Module {
 
     @SubscribeEvent
     public void switchDimension(TickEvent.ClientTickEvent event) {
-        if (Minecraft.getMinecraft().player == null) return;
-        if (Minecraft.getMinecraft().player.dimension != lastDim) {
-            lastDim = Minecraft.getMinecraft().player.dimension;
+        if (PlayerUtil.nullcheck())
+            return;
+
+        if (mc.player.dimension != lastDim) {
+            lastDim = mc.player.dimension;
             sync();
         }
     }

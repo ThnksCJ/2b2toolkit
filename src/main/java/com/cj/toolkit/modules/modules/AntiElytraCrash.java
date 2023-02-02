@@ -1,6 +1,5 @@
 package com.cj.toolkit.modules.modules;
 
-import com.cj.toolkit.command.Command;
 import com.cj.toolkit.modules.Category;
 import com.cj.toolkit.modules.Module;
 import com.cj.toolkit.setting.settings.IntegerSetting;

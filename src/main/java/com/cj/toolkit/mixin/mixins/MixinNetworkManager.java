@@ -1,7 +1,10 @@
 package com.cj.toolkit.mixin.mixins;
 
+import com.cj.toolkit.command.Command;
 import com.cj.toolkit.event.events.network.PacketEvent;
 import com.cj.toolkit.mixin.Precedence;
+import com.cj.toolkit.modules.ModuleManager;
+import com.cj.toolkit.modules.modules.AntiPacketKick;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.NetworkManager;
@@ -58,5 +61,14 @@ public class MixinNetworkManager {
         if (event.isCanceled()) {
             callbackInfo.cancel();
         }
+    }
+
+    @Inject(method = "exceptionCaught", at = @At("HEAD"), cancellable = true)
+    private void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable, CallbackInfo info) {
+        if (ModuleManager.getModule(AntiPacketKick.class).isEnabled()) {
+            Command.sendMessage("[AntiPacketKick] Caught exception - " + throwable.toString());
+            info.cancel();
+        }
+        return;
     }
 }

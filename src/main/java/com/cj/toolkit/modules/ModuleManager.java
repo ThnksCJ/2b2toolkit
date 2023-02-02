@@ -18,7 +18,7 @@ public class ModuleManager {
         addModule(new AntiLeak());
         addModule(new TNTHelper());
         addModule(new AntiElytraCrash());
-        addModule(new PortalInfo());
+        addModule(new AntiPacketKick());
     }
 
     public static Module getModule(String name) {
