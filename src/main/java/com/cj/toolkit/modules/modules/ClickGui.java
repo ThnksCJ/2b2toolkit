@@ -21,13 +21,13 @@ public class ClickGui extends Module {
 
     public enum fontEnum {Blazma, Comfortaa, Greycliff, Tektur}
     public enum formatEnum {Plain, Bold, Italic, BoldItalic}
-    public enum backgroundEnum {None, Static, Blur, Both, Gradient, RainbowGradient, Dark}
+    public enum BackgroundEnum {None, Static, Blur, Both, Gradient, RainbowGradient, Dark, Blark}
 
     public ColorSetting color = new ColorSetting("Foreground", "", new Color(151, 24, 255), false);
     public ColorSetting color2 = new ColorSetting("Background", "", new Color(0, 0, 0, 100), false);
     public EnumSetting<fontEnum> font = new EnumSetting<>("Font", "", fontEnum.Greycliff);
     public EnumSetting<formatEnum> format = new EnumSetting<>("Format", "", formatEnum.Bold);
-    public EnumSetting<backgroundEnum> background = new EnumSetting<>("BackgroundMode", "", backgroundEnum.Gradient);
+    public EnumSetting<BackgroundEnum> background = new EnumSetting<>("BackgroundMode", "", BackgroundEnum.Gradient);
 
     @Override
     public void onEnable() {
@@ -43,23 +43,23 @@ public class ClickGui extends Module {
     }
 
     public void loadShader() {
-        if (background.getValue() == backgroundEnum.Blur || background.getValue() == backgroundEnum.Both) {
-            mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
+        if (background.getValue() == BackgroundEnum.Blur || background.getValue() == BackgroundEnum.Both) {
+            mc.entityRenderer.loadShader(new ResourceLocation("assets/minecraft/shaders/post/blark.json"));
         }
     }
 
     public void stopShader() {
-        if (background.getValue() == backgroundEnum.Blur || background.getValue() == backgroundEnum.Both) {
+        if (background.getValue() == BackgroundEnum.Blur || background.getValue() == BackgroundEnum.Both) {
             mc.entityRenderer.stopUseShader();
         }
     }
 
     public void updateShader() {
         try {
-            if (!(background.getValue() == backgroundEnum.Blur || background.getValue() == backgroundEnum.Both)) {
+            if (!(background.getValue() == BackgroundEnum.Blur || background.getValue() == BackgroundEnum.Both)) {
                 mc.entityRenderer.getShaderGroup().deleteShaderGroup();
-            } else if (background.getValue() == backgroundEnum.Blur || background.getValue() == backgroundEnum.Both) {
-                mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
+            } else if (background.getValue() == BackgroundEnum.Blur || background.getValue() == BackgroundEnum.Both) {
+                mc.entityRenderer.loadShader(new ResourceLocation("assets/minecraft/shaders/post/blark.json"));
             }
         } catch (Exception ignored) {
         }

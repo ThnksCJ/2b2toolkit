@@ -97,17 +97,17 @@ public class Gui extends GuiScreen {
         color = ModuleManager.getModule(ClickGui.class).color.getColor().getRGB();
         color2 = ModuleManager.getModule(ClickGui.class).color2.getColor().getRGB();
 
-        if (ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.backgroundEnum.RainbowGradient) {
+        if (ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.BackgroundEnum.RainbowGradient) {
             Color c2 = ColorUtil.getRainbow();
             float[] c3 = Color.RGBtoHSB(c2.getRed(), c2.getGreen(), c2.getBlue(), null);
             int color3 = Color.HSBtoRGB(c3[0] + 10, c3[1], c3[2]);
 
             GUIUtils.drawSidewaysGradientRect(0, 0, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), ColorUtil.changeAlpha(c2.getRGB(), 150), ColorUtil.changeAlpha(color3, 150));
-        } else if (ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.backgroundEnum.Static || ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.backgroundEnum.Both) {
+        } else if (ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.BackgroundEnum.Static || ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.BackgroundEnum.Both) {
             GUIUtils.drawRectangle(0, 0, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), ColorUtil.changeAlpha(color, 130));
-        } else if (ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.backgroundEnum.Gradient) {
+        } else if (ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.BackgroundEnum.Gradient) {
             GUIUtils.drawGradientRect(0, 0, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), ColorUtil.changeAlpha(color, 20), ColorUtil.changeAlpha(color, 230));
-        } else if (ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.backgroundEnum.Dark) {
+        } else if (ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.BackgroundEnum.Dark || ModuleManager.getModule(ClickGui.class).background.getValue() == ClickGui.BackgroundEnum.Blark) {
             GUIUtils.drawRectangle(0, 0, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), new Color(0, 0, 0, 130).getRGB());
         }
         // square example

@@ -1,0 +1,29 @@
+{
+  "targets": [
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "darken",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "uniforms": [
+        {
+          "name": "DarkenAmount",
+          "values": [ 0.5 ]
+        }
+      ]
+    },
+    {
+      "name": "gblur",
+      "intarget": "swap",
+      "outtarget": "minecraft:main",
+      "uniforms": [
+        {
+          "name": "KernelSize",
+          "values": [ 11 ]
+        }
+      ]
+    }
+  ]
+}
