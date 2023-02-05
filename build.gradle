@@ -76,6 +76,7 @@ shadowJar {
         include(dependency('com.googlecode.json-simple:json-simple:1.1.1'))
         include(dependency('org.spongepowered:mixin'))
         include(dependency('javazoom:jlayer:1.0.1'))
+        include(dependency('com.github.hube12:SEED:master-SNAPSHOT'))
     }
 
     exclude 'dummyThing'
