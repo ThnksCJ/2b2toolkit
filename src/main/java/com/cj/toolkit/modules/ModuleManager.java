@@ -18,7 +18,6 @@ public class ModuleManager {
         addModule(new AntiLeak());
         addModule(new TNTHelper());
         addModule(new AntiElytraCrash());
-        addModule(new AntiPacketKick());
         addModule(new AutoQueueSkip());
     }
 

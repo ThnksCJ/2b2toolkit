@@ -51,6 +51,5 @@ public abstract class Command {
     public Command(final String command) {
         this.command = command;
     }
-
 }
 
