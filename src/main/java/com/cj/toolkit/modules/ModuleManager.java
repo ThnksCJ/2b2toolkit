@@ -19,6 +19,7 @@ public class ModuleManager {
         addModule(new TNTHelper());
         addModule(new AntiElytraCrash());
         addModule(new AntiPacketKick());
+        addModule(new AutoQueueSkip());
     }
 
     public static Module getModule(String name) {

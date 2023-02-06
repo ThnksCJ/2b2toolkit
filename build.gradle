@@ -87,7 +87,6 @@ shadowJar {
 mixin {
     defaultObfuscationEnv searge
     add sourceSets.main, 'mixins.toolkit.refmap.json'
-
 }
 
 reobf {
