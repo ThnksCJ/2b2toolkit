@@ -20,10 +20,8 @@ import static com.cj.toolkit.command.Command.mc;
 
 public class EventManger {
 
-    float hue = 0;
     Color color;
     int rgb;
-    int speedval = 2;
     CommandManager commandManager = new CommandManager();
 
     public static EventManger INSTANCE;
@@ -59,6 +57,10 @@ public class EventManger {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatSent(ClientChatEvent event) {
+        if(event.getMessage() == null || event.getMessage().isEmpty()) return;
+
+        // causes a crash when you type a command
+        /*
         if (event.getMessage().startsWith(Command.getPrefix())) {
             event.setCanceled(true);
             try {
@@ -66,10 +68,9 @@ public class EventManger {
                 commandManager.callCommand(event.getMessage().substring(1));
             } catch (Exception e) {
                 e.printStackTrace();
-                Command.sendErrMessage(e.getMessage());
             }
-            event.setMessage("");
         }
+         */
     }
 
     @SubscribeEvent

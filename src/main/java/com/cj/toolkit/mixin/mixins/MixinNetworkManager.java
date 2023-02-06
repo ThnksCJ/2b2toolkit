@@ -1,10 +1,7 @@
 package com.cj.toolkit.mixin.mixins;
 
-import com.cj.toolkit.command.Command;
 import com.cj.toolkit.event.events.network.PacketEvent;
 import com.cj.toolkit.mixin.Precedence;
-import com.cj.toolkit.modules.ModuleManager;
-import com.cj.toolkit.modules.modules.AntiPacketKick;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.NetworkManager;
@@ -28,9 +25,8 @@ public class MixinNetworkManager {
         PacketEvent.Send event = new PacketEvent.Send(packet);
         MinecraftForge.EVENT_BUS.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCanceled())
             callbackInfo.cancel();
-        }
     }
 
     @Inject(method = "channelRead0*", at = @At("HEAD"), cancellable = true)
@@ -38,9 +34,8 @@ public class MixinNetworkManager {
         PacketEvent.Get event = new PacketEvent.Get(packet);
         MinecraftForge.EVENT_BUS.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCanceled())
             callbackInfo.cancel();
-        }
     }
 
     @Inject(method = "sendPacket(Lnet/minecraft/network/Packet;)V", at = @At("TAIL"), cancellable = true)
@@ -48,27 +43,16 @@ public class MixinNetworkManager {
         PacketEvent.PostSend event = new PacketEvent.PostSend(packet);
         MinecraftForge.EVENT_BUS.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCanceled())
             callbackInfo.cancel();
-        }
     }
 
-    @Inject(method = "channelRead0", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "channelRead0*", at = @At("TAIL"), cancellable = true)
     private void postChannelRead(ChannelHandlerContext context, Packet<?> packet, CallbackInfo callbackInfo) {
         PacketEvent.PostGet event = new PacketEvent.PostGet(packet);
         MinecraftForge.EVENT_BUS.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCanceled())
             callbackInfo.cancel();
-        }
-    }
-
-    @Inject(method = "exceptionCaught", at = @At("HEAD"), cancellable = true)
-    private void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable, CallbackInfo info) {
-        if (ModuleManager.getModule(AntiPacketKick.class).isEnabled()) {
-            Command.sendMessage("[AntiPacketKick] Caught exception - " + throwable.toString());
-            info.cancel();
-        }
-        return;
     }
 }

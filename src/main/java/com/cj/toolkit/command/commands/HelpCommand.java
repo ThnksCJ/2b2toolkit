@@ -4,6 +4,8 @@ import com.cj.toolkit.command.Command;
 import com.cj.toolkit.command.CommandManager;
 import com.google.common.base.Joiner;
 
+import java.util.ArrayList;
+
 
 public class HelpCommand extends Command {
     public HelpCommand() {
@@ -24,7 +26,10 @@ public class HelpCommand extends Command {
 
     @Override
     public void onCommand(String command, String[] args) {
-        Command.sendMessage("Commands [" + CommandManager.getCommands().size() + "]: " + cf_green + Joiner.on(", ").join(CommandManager.commands.toArray()));
+        ArrayList<String> commandNames = new ArrayList<>();
+        CommandManager.getCommands().forEach(c -> commandNames.add(c.getCommand()));
+
+        Command.sendMessage("Commands [" + CommandManager.getCommands().size() + "]: " + cf_green + Joiner.on(", ").join(commandNames));
     }
 }
 
