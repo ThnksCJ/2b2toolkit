@@ -96,7 +96,6 @@ public abstract class Module {
     }
 
     protected void onDisable() {
-        return;
     }
 
 
@@ -113,7 +112,6 @@ public abstract class Module {
     }
 
     public void onUpdate() {
-        return;
     }
 
     public boolean setmodule() {

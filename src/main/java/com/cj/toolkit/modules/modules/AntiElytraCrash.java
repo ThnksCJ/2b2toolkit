@@ -19,8 +19,8 @@ public class AntiElytraCrash extends Module {
 
     @Override
     public void onUpdate() {
-        if(mc.player.isElytraFlying()) {
-            if(isPlayerAboutToCollide(mc.player)) {
+        if (mc.player.isElytraFlying()) {
+            if (isPlayerAboutToCollide(mc.player)) {
                 mc.player.motionX = 0;
                 mc.player.motionY = 0;
                 mc.player.motionZ = 0;

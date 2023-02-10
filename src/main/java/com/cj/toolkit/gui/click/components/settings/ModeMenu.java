@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class ModeMenu extends Component {
@@ -44,9 +45,7 @@ public class ModeMenu extends Component {
         offset = n;
         this.selected = getSelected();
         this.subcomponents = new ArrayList();
-        for (Enum e : enumSetting.getValues()) {
-            subcomponents.add(e);
-        }
+        Collections.addAll(subcomponents, enumSetting.getValues());
         rotation = 0;
 
     }

@@ -42,7 +42,7 @@ public class AntiLeak extends Module {
 
     @Override
     public void onEnable() {
-        if(PlayerUtil.nullcheck()) return;
+        if (PlayerUtil.nullcheck()) return;
 
         sync();
         reload(true);
@@ -55,18 +55,18 @@ public class AntiLeak extends Module {
 
     @Override
     public void onUpdate() {
-        if(mc.player.dimension != lastDim) {
+        if (mc.player.dimension != lastDim) {
             lastDim = mc.player.dimension;
             sync();
         }
 
-        if(terrainHidden.getValue() != isTerrainHidden) {
+        if (terrainHidden.getValue() != isTerrainHidden) {
             isTerrainHidden = terrainHidden.getValue();
             reload(true);
-        } else if(textureRot.getValue() != isTextureRot) {
+        } else if (textureRot.getValue() != isTextureRot) {
             isTextureRot = textureRot.getValue();
             reload(true);
-        } else if(terrainRenderCutoff.getValue() != isTerrainRenderCutoff) {
+        } else if (terrainRenderCutoff.getValue() != isTerrainRenderCutoff) {
             isTerrainRenderCutoff = terrainRenderCutoff.getValue();
             reload(true);
         }
@@ -95,7 +95,7 @@ public class AntiLeak extends Module {
     }
 
     public static void sync() {
-        if(PlayerUtil.nullcheck())
+        if (PlayerUtil.nullcheck())
             return;
 
         if (mc.player.dimension == 0) {

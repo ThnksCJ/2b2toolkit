@@ -273,8 +273,8 @@ public class GUIUtils extends Gui {
         GL11.glTranslated(x, y, 0);
         GL11.glRotatef(180 + theta, 0F, 0F, 1.0F);
 
-        drawLine(0, (1.0F * size), (1 * size), -(1.0F * size), color);
-        drawLine(0, (1.0F * size), -(1 * size), -(1.0F * size), color);
+        drawLine(0, (size), (1 * size), -(size), color);
+        drawLine(0, (size), -(1 * size), -(size), color);
 
         GL11.glRotatef(-180 - theta, 0F, 0F, 1.0F);
         GL11.glTranslated(-x, -y, 0);

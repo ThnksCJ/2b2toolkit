@@ -2,9 +2,9 @@ package com.cj.toolkit.gui.click.components;
 
 import com.cj.toolkit.gui.GUIUtils;
 import com.cj.toolkit.gui.click.Gui;
-import com.cj.toolkit.modules.ModuleManager;
 import com.cj.toolkit.modules.Category;
 import com.cj.toolkit.modules.Module;
+import com.cj.toolkit.modules.ModuleManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;

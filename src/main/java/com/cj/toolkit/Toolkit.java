@@ -1,7 +1,7 @@
 package com.cj.toolkit;
 
-import com.cj.toolkit.modules.ModuleManager;
 import com.cj.toolkit.modules.Module;
+import com.cj.toolkit.modules.ModuleManager;
 import com.cj.toolkit.util.init.Init;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;

@@ -24,7 +24,7 @@ import static com.cj.toolkit.util.render.RenderUtil.mc;
 public class MixinRenderTNTPrimed {
     @Inject(method = "doRender*", at = @At("RETURN"))
     private void insertCode(EntityTNTPrimed entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo ci) {
-        if(ModuleManager.getModule(TNTHelper.class).isEnabled() && TNTHelper.renderTag.getValue())
+        if (ModuleManager.getModule(TNTHelper.class).isEnabled() && TNTHelper.renderTag.getValue())
             renderTag(RenderTNTPrimed.class.cast(this), entity, x, y, z, partialTicks);
     }
 

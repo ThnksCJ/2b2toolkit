@@ -20,7 +20,9 @@ public class ClickGui extends Module {
     }
 
     public enum fontEnum {Blazma, Comfortaa, Greycliff, Tektur}
+
     public enum formatEnum {Plain, Bold, Italic, BoldItalic}
+
     public enum BackgroundEnum {None, Static, Blur, Both, Gradient, RainbowGradient, Dark, Blark}
 
     public ColorSetting color = new ColorSetting("Foreground", "", new Color(151, 24, 255), false);

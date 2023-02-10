@@ -12,13 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = MathHelper.class, priority = Precedence.MAXIMUM)
 public class MixinMathHelper {
     @Inject(method = "getCoordinateRandom", at = @At("HEAD"), cancellable = true)
-    private static void modifyRandomTexture(int x, int y, int z, CallbackInfoReturnable<Long> cir){
+    private static void modifyRandomTexture(int x, int y, int z, CallbackInfoReturnable<Long> cir) {
         if (AntiLeak.textureRot.getValue() && ModuleManager.getModule(AntiLeak.class).isEnabled()) {
             int newX = AntiLeak.offsetRand.getX();
             int newY = AntiLeak.offsetRand.getY();
             int newZ = AntiLeak.offsetRand.getZ();
 
-            long i = (long)(newX * 3129871) ^ (long)newZ * 116129781L ^ (long)newY;
+            long i = (newX * 3129871L) ^ (long) newZ * 116129781L ^ (long) newY;
             i = i * i * 42317861L + i * 11L;
 
             cir.setReturnValue(i);

@@ -4,13 +4,11 @@
   "package": "com.cj.toolkit.mixin.mixins",
   "refmap": "mixins.toolkit.refmap.json",
   "mixins": [
+    "MixinBlockRendererDispatcher",
     "MixinEntityPlayerSP",
     "MixinMathHelper",
     "MixinNetworkManager",
-    "MixinPlayerControllerMP"
-  ],
-  "client": [
-    "MixinBlockRendererDispatcher",
+    "MixinPlayerControllerMP",
     "MixinRenderTNTPrimed"
   ]
 }

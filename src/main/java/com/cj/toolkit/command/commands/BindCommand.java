@@ -1,8 +1,8 @@
 package com.cj.toolkit.command.commands;
 
 import com.cj.toolkit.command.Command;
-import com.cj.toolkit.modules.ModuleManager;
 import com.cj.toolkit.modules.Module;
+import com.cj.toolkit.modules.ModuleManager;
 import org.lwjgl.input.Keyboard;
 
 public class BindCommand extends Command {

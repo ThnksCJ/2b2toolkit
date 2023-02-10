@@ -4,8 +4,8 @@ import com.cj.toolkit.Toolkit;
 import com.cj.toolkit.ToolkitPlayer;
 import com.cj.toolkit.command.Command;
 import com.cj.toolkit.manager.FriendManager;
-import com.cj.toolkit.modules.ModuleManager;
 import com.cj.toolkit.modules.Module;
+import com.cj.toolkit.modules.ModuleManager;
 import com.cj.toolkit.setting.Setting;
 import com.cj.toolkit.setting.settings.*;
 import com.cj.toolkit.util.misc.ColorUtil;
@@ -244,6 +244,10 @@ public class SaveLoad {
             BufferedReader buffReader = new BufferedReader(fileReader);
 
             String string = buffReader.readLine();
+
+            if (string.equals(""))
+                return;
+
             Command.setPrefix(string);
 
             buffReader.close();

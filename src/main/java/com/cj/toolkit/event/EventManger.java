@@ -2,10 +2,11 @@ package com.cj.toolkit.event;
 
 import com.cj.toolkit.command.Command;
 import com.cj.toolkit.command.CommandManager;
-import com.cj.toolkit.modules.ModuleManager;
+import com.cj.toolkit.event.events.network.PacketEvent;
 import com.cj.toolkit.modules.Module;
-import com.cj.toolkit.Toolkit;
-import net.minecraftforge.client.event.ClientChatEvent;
+import com.cj.toolkit.modules.ModuleManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -55,9 +56,22 @@ public class EventManger {
             ModuleManager.onUpdate();
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatSent(ClientChatEvent event) {
-        if(event.getMessage() == null || event.getMessage().isEmpty()) return;
+    @SubscribeEvent
+    public void onChatSent(PacketEvent.Send event) {
+        final Packet<?> packet = event.getPacket();
+
+        if (!(packet instanceof CPacketChatMessage))
+            return;
+
+        final CPacketChatMessage cPacketChatMessage = (CPacketChatMessage) packet;
+
+        final String message = cPacketChatMessage.getMessage();
+
+        if (!message.startsWith(Command.getPrefix()))
+            return;
+
+        event.setCanceled(true);
+        commandManager.callCommand(message.substring(1));
 
         // causes a crash when you type a command
         /*

@@ -30,12 +30,12 @@ public class MixinBlockRendererDispatcher {
 
         if (
                 state.getBlock() == Blocks.BEDROCK ||
-                state.getBlock() == Blocks.TALLGRASS ||
-                state.getBlock() == Blocks.DOUBLE_PLANT ||
-                state.getBlock() == Blocks.DEADBUSH ||
-                state.getBlock() == Blocks.RED_FLOWER ||
-                state.getBlock() == Blocks.YELLOW_FLOWER ||
-                state.getBlock() == Blocks.SNOW_LAYER
+                        state.getBlock() == Blocks.TALLGRASS ||
+                        state.getBlock() == Blocks.DOUBLE_PLANT ||
+                        state.getBlock() == Blocks.DEADBUSH ||
+                        state.getBlock() == Blocks.RED_FLOWER ||
+                        state.getBlock() == Blocks.YELLOW_FLOWER ||
+                        state.getBlock() == Blocks.SNOW_LAYER
         ) {
 
             info.setReturnValue(false);

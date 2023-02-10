@@ -25,7 +25,10 @@ public class FriendManager extends Wrapper {
     public static boolean isFriend(String name) {
         boolean friend = false;
         for (ToolkitPlayer f : getFriends()) {
-            if (f.getName().equalsIgnoreCase(name)) friend = true;
+            if (f.getName().equalsIgnoreCase(name)) {
+                friend = true;
+                break;
+            }
         }
         return friend;
     }
