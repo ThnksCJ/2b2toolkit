@@ -14,7 +14,6 @@ public class ModuleManager {
         mods = new ArrayList<>();
 
         addModule(new ClickGui());
-        addModule(new Translator());
         addModule(new AntiLeak());
         addModule(new TNTHelper());
         addModule(new AntiElytraCrash());
