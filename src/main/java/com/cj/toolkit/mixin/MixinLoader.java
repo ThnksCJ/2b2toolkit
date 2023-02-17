@@ -11,7 +11,6 @@ import java.util.Map;
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 public class MixinLoader implements IFMLLoadingPlugin {
     public MixinLoader() {
-
         MixinBootstrap.init();
         Mixins.addConfiguration("mixins.toolkit.json");
     }
@@ -38,7 +37,6 @@ public class MixinLoader implements IFMLLoadingPlugin {
 
     @Override
     public String getAccessTransformerClass() {
-        return null;
+        return ToolkitAccessTransformer.class.getName();
     }
-
 }
