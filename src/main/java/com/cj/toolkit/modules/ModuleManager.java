@@ -18,6 +18,7 @@ public class ModuleManager {
         addModule(new TNTHelper());
         addModule(new AntiElytraCrash());
         addModule(new AutoQueueSkip());
+        addModule(new AutoLogTimer());
     }
 
     public static Module getModule(String name) {

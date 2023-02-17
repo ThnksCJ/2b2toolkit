@@ -1,30 +1,29 @@
 package com.cj.toolkit.util.misc;
 
 public class TimerUtil {
-    private long time;
+    private long current;
 
     public TimerUtil() {
-        this.time = System.currentTimeMillis();
+        this.current = System.currentTimeMillis();
     }
 
-    public boolean passed(double delay) {
-        return System.currentTimeMillis() - this.time >= delay;
+    public boolean passed(final long delay) {
+        return System.currentTimeMillis() - this.current >= delay;
+    }
+
+    public long elapsed() {
+        return time() - this.current;
     }
 
     public void reset() {
-        this.time = System.currentTimeMillis();
-    }
-
-    public long getPassedTime() {
-        return System.currentTimeMillis() - this.time;
+        this.current = System.currentTimeMillis();
     }
 
     public long time() {
         return System.currentTimeMillis();
     }
 
-    public void set(long time) {
-        this.time = time;
+    public long getTime() {
+        return current;
     }
-
 }
