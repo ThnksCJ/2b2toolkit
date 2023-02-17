@@ -72,19 +72,6 @@ public class EventManger {
 
         event.setCanceled(true);
         commandManager.callCommand(message.substring(1));
-
-        // causes a crash when you type a command
-        /*
-        if (event.getMessage().startsWith(Command.getPrefix())) {
-            event.setCanceled(true);
-            try {
-                mc.ingameGUI.getChatGUI().addToSentMessages(event.getMessage());
-                commandManager.callCommand(event.getMessage().substring(1));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-         */
     }
 
     @SubscribeEvent
