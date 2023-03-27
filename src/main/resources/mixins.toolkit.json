@@ -1,7 +1,8 @@
 {
   "required": true,
   "compatibilityLevel": "JAVA_8",
-  "package": "com.cj.toolkit.mixin.mixins",
+  "minVersion": "0.7.11",
+  "package": "com.thnkscj.toolkit.mixin.mixins",
   "refmap": "mixins.toolkit.refmap.json",
   "mixins": [
     "MixinBlockRendererDispatcher",
@@ -10,5 +11,8 @@
     "MixinNetworkManager",
     "MixinPlayerControllerMP",
     "MixinRenderTNTPrimed"
+  ],
+  "client": [
+    "MixinGuiMainMenu"
   ]
 }

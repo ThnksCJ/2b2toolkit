@@ -37,7 +37,7 @@ minecraft {
     version = project.forgeVersion
     runDir = 'run'
     mappings = project.mcpVersion
-    coreMod = 'com.cj.toolkit.mixin.MixinLoader'
+    coreMod = 'com.thnkscj.toolkit.mixin.MixinLoader'
     makeObfSourceJar = false
 }
 
@@ -103,7 +103,7 @@ jar {
                 'tweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
                 'TweakOrder': 0,
                 'FMLCorePluginContainsFMLMod': 'true',
-                'FMLCorePlugin': 'com.cj.toolkit.mixin.mixins.MixinLoader',
+                'FMLCorePlugin': 'com.thnkscj.toolkit.mixin.mixins.MixinLoader',
                 'ForceLoadAsMod': 'true',
                 'FMLAT': 'toolkit_at.cfg'
         )
