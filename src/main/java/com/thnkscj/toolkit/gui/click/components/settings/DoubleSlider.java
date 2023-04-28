@@ -13,18 +13,18 @@ import java.math.RoundingMode;
 
 public class DoubleSlider extends com.thnkscj.toolkit.gui.click.components.Component {
 
+    private final DoubleSetting val;
+    private final com.thnkscj.toolkit.gui.click.components.Button parent;
+    private final int parentWidth;
+    private final double smoothRenderWidth = 0;
     private boolean hovered;
     private boolean hovered2;
     private int x;
-    private final DoubleSetting val;
     private boolean dragging = false;
-    private final com.thnkscj.toolkit.gui.click.components.Button parent;
     private int y;
     private int offset;
-    private final int parentWidth;
     private double renderWidth;
     private double smoothWidth;
-    private final double smoothRenderWidth = 0;
     private float hoveredWidth = 1;
     private double oldWidth = 0;
 
@@ -37,15 +37,15 @@ public class DoubleSlider extends com.thnkscj.toolkit.gui.click.components.Compo
         this.parentWidth = this.parent.parent.getWidth() - 30;
     }
 
-    @Override
-    public int getHeight() {
-        return 25;
-    }
-
     private static double roundToPlace(double d, int n) {
         BigDecimal bigDecimal = new BigDecimal(d);
         bigDecimal = bigDecimal.setScale(n, RoundingMode.HALF_UP);
         return bigDecimal.doubleValue();
+    }
+
+    @Override
+    public int getHeight() {
+        return 25;
     }
 
     @Override

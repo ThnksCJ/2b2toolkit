@@ -1,4 +1,4 @@
-package com.thnkscj.toolkit.gui.Font;
+package com.thnkscj.toolkit.gui.font;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -13,13 +13,12 @@ import java.util.HashMap;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GlyphPage {
-    private int imgSize;
-    private int maxFontHeight = -1;
     private final Font font;
     private final boolean antiAliasing;
     private final boolean fractionalMetrics;
     private final HashMap<Character, Glyph> glyphCharacterMap = new HashMap<>();
-
+    private int imgSize;
+    private int maxFontHeight = -1;
     private BufferedImage bufferedImage;
     private DynamicTexture loadedTexture;
 

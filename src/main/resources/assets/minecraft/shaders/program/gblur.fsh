@@ -21,7 +21,7 @@ void main() {
     for (int x = -KernelSize; x <= KernelSize; x++) {
         for (int y = -KernelSize; y <= KernelSize; y++) {
             r = sqrt(x * x + y * y);
-            kernel[x + KernelSize][y + KernelSize] = (exp(-(r * r) / s)) / (M_PI * s);
+            kernel[x + KernelSize][y + KernelSize] = (exp(-(r * r) / s)) / (3.14 * s);
             sum += kernel[x + KernelSize][y + KernelSize];
 
         }

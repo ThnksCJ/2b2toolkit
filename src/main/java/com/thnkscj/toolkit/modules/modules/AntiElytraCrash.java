@@ -9,13 +9,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 public class AntiElytraCrash extends Module {
+    public static IntegerSetting crashDistance = new IntegerSetting("Crash Distance", "Distance to stop", 1, 5, 15);
+
     public AntiElytraCrash() {
         super("AntiElytraCrash", "Attempts to prevent elytra crash. Idea from IronException#4092", Category.CLIENT);
 
         addSettings(crashDistance);
     }
-
-    public static IntegerSetting crashDistance = new IntegerSetting("Crash Distance", "Distance to stop", 1, 5, 15);
 
     @Override
     public void onUpdate() {

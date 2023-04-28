@@ -9,15 +9,18 @@ public abstract class Command {
     public static Minecraft mc = Minecraft.getMinecraft();
 
     public static String prefix = ".";
-    public String command;
-
     public static ChatFormatting cf_gray = ChatFormatting.GRAY;
     public static ChatFormatting cf_aqua = ChatFormatting.AQUA;
     public static ChatFormatting cf_yellow = ChatFormatting.YELLOW;
     public static ChatFormatting cf_red = ChatFormatting.RED;
     public static ChatFormatting cf_green = ChatFormatting.GREEN;
     public static ChatFormatting cfr = ChatFormatting.RESET;
+    public String command;
 
+
+    public Command(final String command) {
+        this.command = command;
+    }
 
     public static void sendMessage(String message) {
         if (mc.player != null || mc.world != null) {
@@ -45,10 +48,6 @@ public abstract class Command {
 
     public String getCommand() {
         return this.command;
-    }
-
-    public Command(final String command) {
-        this.command = command;
     }
 }
 

@@ -19,6 +19,12 @@ public class ModuleManager {
         addModule(new AntiElytraCrash());
         addModule(new AutoQueueSkip());
         addModule(new AutoLogTimer());
+        addModule(new Notifications());
+        addModule(new PortalInfo());
+        addModule(new GameplayTweaks());
+        addModule(new FakePlayer());
+        addModule(new Clans());
+        addModule(new ElytraFly());
     }
 
     public static Module getModule(String name) {
@@ -29,10 +35,6 @@ public class ModuleManager {
             }
         }
         return null;
-    }
-
-    public ArrayList<Module> getModuleList() {
-        return mods;
     }
 
     public static ArrayList<Module> getModuleByCategory(Category category) {
@@ -65,7 +67,6 @@ public class ModuleManager {
         mods.add(mod);
     }
 
-
     public static void onUpdate() {
         mods.stream().filter(Module::isEnabled).forEach(Module::onUpdate);
     }
@@ -81,5 +82,9 @@ public class ModuleManager {
                 }
             }
         });
+    }
+
+    public ArrayList<Module> getModuleList() {
+        return mods;
     }
 }

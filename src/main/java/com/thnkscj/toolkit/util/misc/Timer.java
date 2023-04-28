@@ -1,9 +1,9 @@
 package com.thnkscj.toolkit.util.misc;
 
-public class TimerUtil {
+public class Timer {
     private long current;
 
-    public TimerUtil() {
+    public Timer() {
         this.current = System.currentTimeMillis();
     }
 

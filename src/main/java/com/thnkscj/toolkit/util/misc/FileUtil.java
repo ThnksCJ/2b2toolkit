@@ -24,19 +24,6 @@ public class FileUtil {
         return list;
     }
 
-    public String getFileContent(File srcFile) throws Exception {
-        if ((srcFile != null) && srcFile.exists() && srcFile.isFile()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(srcFile)));
-            StringBuffer contentOfFile = new StringBuffer();
-            String line;
-            while ((line = br.readLine()) != null) {
-                contentOfFile.append(line);
-                return contentOfFile.toString();
-            }
-        }
-        return null;
-    }
-
     public static void zipSingleFile(Path source, String zipFileName) throws IOException {
 
         if (!Files.isRegularFile(source)) {
@@ -118,6 +105,19 @@ public class FileUtil {
             e.printStackTrace();
         }
         return stringBuilder.toString();
+    }
+
+    public String getFileContent(File srcFile) throws Exception {
+        if ((srcFile != null) && srcFile.exists() && srcFile.isFile()) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(srcFile)));
+            StringBuffer contentOfFile = new StringBuffer();
+            String line;
+            while ((line = br.readLine()) != null) {
+                contentOfFile.append(line);
+                return contentOfFile.toString();
+            }
+        }
+        return null;
     }
 
 }

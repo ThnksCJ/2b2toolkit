@@ -1,4 +1,4 @@
-package com.thnkscj.toolkit.gui.Font;
+package com.thnkscj.toolkit.gui.font;
 
 import net.minecraft.client.Minecraft;
 

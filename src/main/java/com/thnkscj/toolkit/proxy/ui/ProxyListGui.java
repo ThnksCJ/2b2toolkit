@@ -12,9 +12,9 @@ import org.lwjgl.input.Keyboard;
 import java.io.IOException;
 
 public class ProxyListGui extends GuiScreen {
+    public final ServerPinger oldServerPinger = new ServerPinger();
     private final GuiScreen parentScreen;
     private ProxySelectionList proxyListSelector;
-    public final ServerPinger oldServerPinger = new ServerPinger();
     private boolean initialized;
     private GuiButton btnSelectServer;
 

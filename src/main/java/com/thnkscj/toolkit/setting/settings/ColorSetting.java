@@ -7,12 +7,14 @@ import java.awt.*;
 
 public final class ColorSetting extends Setting<Color> {
 
+    public boolean rainbow;
+
+
     public ColorSetting(final String name, final String description, final Color value, final boolean rbow) {
         super(name, description, value);
 
         this.rainbow = rbow;
     }
-
 
     public Color getColor() {
         if (this.rainbow) {
@@ -32,10 +34,7 @@ public final class ColorSetting extends Setting<Color> {
         this.value = color;
     }
 
-
     public void setRainbow(boolean val) {
         this.rainbow = val;
     }
-
-    public boolean rainbow;
 }

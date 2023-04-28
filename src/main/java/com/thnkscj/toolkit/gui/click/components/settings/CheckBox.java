@@ -13,11 +13,11 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 
 public class CheckBox extends com.thnkscj.toolkit.gui.click.components.Component {
-    private boolean hovered;
     private final BooleanSetting op;
+    private final Button parent;
+    private boolean hovered;
     private int x;
     private int y;
-    private final Button parent;
     private int offset;
     private float hoveredWidth = 1;
     private int alpha;

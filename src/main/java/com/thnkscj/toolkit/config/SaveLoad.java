@@ -22,10 +22,8 @@ import java.util.Date;
 
 public class SaveLoad {
 
-    public static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
-
     public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-
+    public static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
     public static String s = DATE_FORMAT.format(new Date());
 
     public static void saveConfig() {

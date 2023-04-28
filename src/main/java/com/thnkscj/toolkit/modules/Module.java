@@ -1,9 +1,12 @@
 package com.thnkscj.toolkit.modules;
 
 import com.thnkscj.toolkit.command.Command;
+import com.thnkscj.toolkit.event.events.render.Render2DEvent;
+import com.thnkscj.toolkit.modules.modules.Notifications;
 import com.thnkscj.toolkit.setting.Setting;
 import com.thnkscj.toolkit.util.entity.PlayerUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
@@ -14,21 +17,15 @@ import java.util.List;
 public abstract class Module {
 
     protected static final Minecraft mc = Minecraft.getMinecraft();
-
-    public String name, desc;
-
-    private final Category category;
-
-    private boolean enabled;
-    private final boolean drawn;
-
-    public int bind;
-
     protected final List<Setting<?>> settings;
+    private final Category category;
+    private final boolean drawn;
+    public String name, desc;
+    public int bind;
+    private boolean enabled;
 
 
     public Module(String name, String desc, Category category) {
-
         this.name = name;
         this.desc = desc;
         this.category = category;
@@ -69,15 +66,10 @@ public abstract class Module {
         return this.category;
     }
 
-
-    public void setEnabled(boolean e) {
-        enabled = e;
-    }
-
     public void enable() {
         setEnabled(true);
         MinecraftForge.EVENT_BUS.register(this);
-        if (!getName().equalsIgnoreCase("ClickGUI") && !PlayerUtil.nullcheck()) {
+        if (!getName().equalsIgnoreCase("ClickGUI") && !PlayerUtil.nullcheck() && Notifications.chat.getValue()) {
             Command.sendMessage(Command.cf_gray + getName() + " toggled" + Command.cf_green + " on." + Command.cfr);
         }
         onEnable();
@@ -86,7 +78,7 @@ public abstract class Module {
     public void disable() {
         setEnabled(false);
         MinecraftForge.EVENT_BUS.unregister(this);
-        if (!getName().equalsIgnoreCase("ClickGUI") && !PlayerUtil.nullcheck()) {
+        if (!getName().equalsIgnoreCase("ClickGUI") && !PlayerUtil.nullcheck() && Notifications.chat.getValue()) {
             Command.sendMessage(Command.cf_gray + getName() + " toggled" + Command.cf_red + " off." + Command.cfr);
         }
         onDisable();
@@ -98,17 +90,20 @@ public abstract class Module {
     protected void onDisable() {
     }
 
-
     public void toggle() {
         if (isEnabled()) {
             disable();
-        } else if (!isEnabled()) {
+        } else {
             enable();
         }
     }
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void setEnabled(boolean e) {
+        enabled = e;
     }
 
     public void onUpdate() {
@@ -126,7 +121,9 @@ public abstract class Module {
         return settings;
     }
 
-    public void onWorldRender() {
+    public void onWorldRender(RenderWorldLastEvent event) {
     }
 
+    public void onRender2D(Render2DEvent event) {
+    }
 }

@@ -17,12 +17,12 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Gui extends GuiScreen {
-    static Gui INSTANCE = new Gui();
     public static ArrayList<Frame> frames;
-    private float scale = 0;
     public static int color = ModuleManager.getModule(ClickGui.class).color.getColor().getRGB();
     public static int color2 = ModuleManager.getModule(ClickGui.class).color2.getColor().getRGB();
+    static Gui INSTANCE = new Gui();
     private final int anim = 0;
+    private float scale = 0;
 
     public Gui() {
         setInstance();

@@ -1,8 +1,8 @@
 package com.thnkscj.toolkit.command.commands;
 
+import com.google.common.base.Joiner;
 import com.thnkscj.toolkit.command.Command;
 import com.thnkscj.toolkit.command.CommandManager;
-import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 

@@ -19,14 +19,14 @@ import java.util.Objects;
 
 public class ModeMenu extends com.thnkscj.toolkit.gui.click.components.Component {
 
-    private boolean hovered;
     private final EnumSetting op;
+    private final com.thnkscj.toolkit.gui.click.components.Button parent;
+    public ArrayList subcomponents;
+    private boolean hovered;
     private int x;
     private int y;
-    private final com.thnkscj.toolkit.gui.click.components.Button parent;
     private int offset;
     private float hoveredWidth = 1;
-    public ArrayList subcomponents;
     private Enum selected;
     private int selectedY = 17;
     private int smoothY = 17;
@@ -153,11 +153,11 @@ public class ModeMenu extends com.thnkscj.toolkit.gui.click.components.Component
         if (this.opened) {
             if (this.subcomponents.size() == 2) {
                 if (scissor < this.getHeight() - 11) {
-                    scissor += 1;
+                    scissor += ClickGui.animationSpeed.getValue();
                 }
             } else {
                 if (scissor < this.getHeight() - 21) {
-                    scissor += 1;
+                    scissor += ClickGui.animationSpeed.getValue();
                 }
             }
         } else {
@@ -192,9 +192,6 @@ public class ModeMenu extends com.thnkscj.toolkit.gui.click.components.Component
 
     @Override
     public void renderComponent() {
-
-        //GUIUtils.drawTriangle(parent.parent.getX() + 80, parent.parent.getY() + offset + 7, 20, 90, new Color(255,255,255).getRGB());
-
         GUIUtils.drawRectangle(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getWidth(), this.getHeight(), Gui.color2);
 
         GL11.glPushMatrix();

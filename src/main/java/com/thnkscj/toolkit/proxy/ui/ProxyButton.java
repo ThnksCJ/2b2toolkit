@@ -16,8 +16,9 @@ public class ProxyButton extends GuiButton {
         super(8068, x, y, 40, 40, "");
 
         try {
-            image = ImageIO.read(new URL("https://mc-heads.net/avatar/Thnks_CJ/32.png"));
-        } catch (IOException ignored) {}
+            image = ImageIO.read(new URL("https://i.imgur.com/sO7U61C.png"));
+        } catch (IOException ignored) {
+        }
     }
 
     @Override
@@ -26,14 +27,22 @@ public class ProxyButton extends GuiButton {
 
         drawRect(this.x + this.width, this.y + (this.height / 2) - 15, this.x + this.width + 50, this.y + (this.height / 2) + 15, 0xFF505060);
 
-        for (int x = 0; x < 32; x++) {
-            for (int y = 0; y < 32; y++) {
-                drawRect(this.x + 4 + x, this.y + 4 + y, this.x + 5 + x, this.y + 5 + y, image.getRGB(x, y));
+        // image
+        {
+            int scale = 1;
+
+            while (image.getWidth() / scale > 32 || image.getHeight() / scale > 32) {
+                scale++;
+            }
+
+            for (int x = 0; x < image.getWidth() / scale; x++) {
+                for (int y = 0; y < image.getHeight() / scale; y++) {
+                    drawRect(this.x + 4 + x, this.y + 4 + y, this.x + 5 + x, this.y + 5 + y, image.getRGB(x * scale, y * scale));
+                }
             }
         }
 
         this.drawCenteredString(mc.fontRenderer, "Proxy's", this.x + this.width + 25, this.y + (this.height / 2) - 4, 0xFFFFFF);
-
         // outlines
         drawRect(this.x, this.y, this.x + this.width, this.y + 1, 0xFF000000);
         drawRect(this.x, this.y, this.x + 1, this.y + this.height, 0xFF000000);

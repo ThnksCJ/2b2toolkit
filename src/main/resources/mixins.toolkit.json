@@ -7,12 +7,12 @@
   "mixins": [
     "MixinBlockRendererDispatcher",
     "MixinEntityPlayerSP",
+    "MixinEntityRenderer",
     "MixinMathHelper",
     "MixinNetworkManager",
     "MixinPlayerControllerMP",
-    "MixinRenderTNTPrimed"
-  ],
-  "client": [
+    "MixinRenderTNTPrimed",
+    "MixinGuiNewChat",
     "MixinGuiMainMenu"
   ]
 }

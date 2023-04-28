@@ -1,4 +1,4 @@
-package com.thnkscj.toolkit.gui.Font;
+package com.thnkscj.toolkit.gui.font;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,28 +15,24 @@ import java.util.Random;
 import static org.lwjgl.opengl.GL11.*;
 
 public class FontRenderer {
+    private final int[] colorCode = new int[32];
+    private final GlyphPage regularGlyphPage;
+    private final GlyphPage boldGlyphPage;
+    private final GlyphPage italicGlyphPage;
+    private final GlyphPage boldItalicGlyphPage;
     public Random fontRandom = new Random();
-
     private float posX;
     private float posY;
-    private final int[] colorCode = new int[32];
     private float red;
     private float blue;
     private float green;
     private float alpha;
-
     private int textColor;
-
     private boolean randomStyle;
     private boolean boldStyle;
     private boolean italicStyle;
     private boolean underlineStyle;
     private boolean strikethroughStyle;
-
-    private final GlyphPage regularGlyphPage;
-    private final GlyphPage boldGlyphPage;
-    private final GlyphPage italicGlyphPage;
-    private final GlyphPage boldItalicGlyphPage;
 
     public FontRenderer(GlyphPage regularGlyphPage, GlyphPage boldGlyphPage, GlyphPage italicGlyphPage, GlyphPage boldItalicGlyphPage) {
         this.regularGlyphPage = regularGlyphPage;

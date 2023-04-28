@@ -4,7 +4,7 @@ import com.thnkscj.toolkit.command.Command;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.setting.settings.IntegerSetting;
-import com.thnkscj.toolkit.util.misc.TimerUtil;
+import com.thnkscj.toolkit.util.misc.Timer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,16 +20,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class AutoLogTimer extends Module {
+    public static final IntegerSetting threshold = new IntegerSetting("Threshold", "", 1, 10, 15);
+    private boolean didQuit = false;
+    private ServerData serverData;
+
     public AutoLogTimer() {
         super("AutoLogTimer", "Automatically logs you out after a set amount of time", Category.CLIENT);
 
         addSettings(threshold);
     }
-
-    public static final IntegerSetting threshold = new IntegerSetting("Threshold", "", 1, 10, 15);
-
-    private boolean didQuit = false;
-    private ServerData serverData;
 
     @Override
     public void onDisable() {
@@ -39,12 +38,12 @@ public class AutoLogTimer extends Module {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if(!didQuit){
-            if(mc.player == null || mc.world == null){
+        if (!didQuit) {
+            if (mc.player == null || mc.world == null) {
                 toggle();
                 return;
             }
-            if(mc.isSingleplayer()){
+            if (mc.isSingleplayer()) {
                 Command.sendMessage("Bro you are in single player lmao");
                 toggle();
                 return;
@@ -56,8 +55,8 @@ public class AutoLogTimer extends Module {
     }
 
     @SubscribeEvent
-    public void onGuiOpen(GuiOpenEvent event){
-        if(event.getGui() instanceof GuiDisconnected){
+    public void onGuiOpen(GuiOpenEvent event) {
+        if (event.getGui() instanceof GuiDisconnected) {
             event.setGui(new AutoLogGui((GuiDisconnected) event.getGui(), serverData, threshold.getValue()));
         }
     }
@@ -65,19 +64,19 @@ public class AutoLogTimer extends Module {
     private class AutoLogGui extends GuiScreen {
         private final String reason;
         private final ITextComponent message;
-        private List<String> multilineMessage;
         private final GuiScreen parentScreen;
-        private int textHeight;
         private final ServerData lastServer;
-        private final TimerUtil timer;
+        private final Timer timer;
         private final int delay;
+        private List<String> multilineMessage;
+        private int textHeight;
 
         public AutoLogGui(final GuiDisconnected disconnected, final ServerData lastServer, final int delay) {
             this.parentScreen = disconnected.parentScreen;
             this.reason = disconnected.reason;
             this.message = disconnected.message;
             this.lastServer = lastServer;
-            this.timer = new TimerUtil();
+            this.timer = new Timer();
             this.delay = delay;
         }
 

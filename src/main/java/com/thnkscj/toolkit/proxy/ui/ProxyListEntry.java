@@ -33,8 +33,8 @@ public class ProxyListEntry implements GuiListExtended.IGuiListEntry {
     private static final ThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(5, (new ThreadFactoryBuilder()).setNameFormat("Server Pinger #%d").setDaemon(true).build());
     private static final ResourceLocation UNKNOWN_SERVER = new ResourceLocation("textures/misc/unknown_server.png");
     private static final ResourceLocation SERVER_SELECTION_BUTTONS = new ResourceLocation("textures/gui/server_selection.png");
-    private final ProxyListGui owner;
     public final ServerPinger oldServerPinger = new ServerPinger();
+    private final ProxyListGui owner;
     private final Minecraft mc;
     private final ServerData server;
     private final ResourceLocation serverIcon;

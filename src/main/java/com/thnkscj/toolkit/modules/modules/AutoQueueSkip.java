@@ -4,29 +4,29 @@ import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.setting.settings.BooleanSetting;
 import com.thnkscj.toolkit.setting.settings.IntegerSetting;
-import com.thnkscj.toolkit.util.misc.TimerUtil;
+import com.thnkscj.toolkit.util.misc.Timer;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.client.event.GuiOpenEvent;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class AutoQueueSkip extends Module {
+    public static final IntegerSetting threshold = new IntegerSetting("Threshold", "When to preform preform skip", 1, 6, 15);
+    public static final IntegerSetting rejoinThreshold = new IntegerSetting("ReJoin Threshold", "How long to wait before rejoining", 0, 1, 15);
+    public static final BooleanSetting reconnect = new BooleanSetting("Reconnect", "Reconnect queue skip", true);
+    private final Pattern pattern = Pattern.compile("Server restarting in " + threshold.getValue());
+    private final Timer timer = new Timer();
+
     public AutoQueueSkip() {
         super("AutoQueueSkip", "Automatically skips the queue", Category.CLIENT);
 
-        addSettings(threshold);
+        addSettings(threshold, rejoinThreshold, reconnect);
     }
-
-    public static final IntegerSetting threshold = new IntegerSetting("Threshold", "When to preform preform skip", 1, 6, 15);
-    public static final BooleanSetting reconnect = new BooleanSetting("Reconnect", "Reconnect queue skip", true);
-
-    private final Pattern pattern = Pattern.compile("Server restarting in " + threshold.getValue());
-    private final TimerUtil timer = new TimerUtil();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ClientChatReceivedEvent event) {
@@ -41,7 +41,7 @@ public class AutoQueueSkip extends Module {
         this.timer.reset();
         if (event.getGui() instanceof GuiDisconnected) {
             if (reconnect.getValue()) {
-                while(this.timer.passed(threshold.getValue() * 1000L)) {
+                while (this.timer.passed(rejoinThreshold.getValue() * 1000L)) {
                     mc.displayGuiScreen(new GuiConnecting(null, mc, Objects.requireNonNull(mc.getCurrentServerData())));
                     this.timer.reset();
                 }

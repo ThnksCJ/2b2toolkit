@@ -5,7 +5,9 @@ import com.thnkscj.toolkit.gui.click.Gui;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.modules.ModuleManager;
+import com.thnkscj.toolkit.modules.modules.ClickGui;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -14,19 +16,18 @@ import java.util.ArrayList;
 
 public class Frame {
 
-    private int x;
-    private int y;
-    public int dragX;
-    public int dragY;
     private final int barHeight;
     private final int width;
-    private boolean open;
+    public int dragX;
+    public int dragY;
     public boolean isDragging;
-    private int offset;
     public Category category;
     public ArrayList components = new ArrayList();
     public double cntComp = 0.0;
-    private Minecraft mnc;
+    private int x;
+    private int y;
+    private boolean open;
+    private int offset;
     private double animFactor = 0;
 
 
@@ -42,13 +43,24 @@ public class Frame {
         int n = this.barHeight - 1;
         for (Object obj : ModuleManager.getModuleByCategory(category)) {
             Module module = (Module) obj;
-            com.thnkscj.toolkit.gui.click.components.Button button = new com.thnkscj.toolkit.gui.click.components.Button(module, this, n);
+            Button button = new Button(module, this, n);
             this.components.add(button);
             n += 16;
         }
         offset = n - 17;
     }
 
+    public static void getModCount() {
+        int size = ModuleManager.getModules().size();
+
+        for (int i = 0; i < size; ++i) {
+            final Module m = ModuleManager.getModules().get(i);
+
+            if (m != null) {
+
+            }
+        }
+    }
 
     public int getWidth() {
         return this.width;
@@ -69,7 +81,6 @@ public class Frame {
         }
     }
 
-
     public void refresh() {
         int n = this.barHeight;
         for (Object components : this.components) {
@@ -79,7 +90,7 @@ public class Frame {
         }
         int n2 = this.barHeight - 1;
         for (Object obj : this.components) {
-            com.thnkscj.toolkit.gui.click.components.Button component = (Button) obj;
+            Button component = (Button) obj;
             n2 += component.getHeight();
         }
         offset = n2 - 17;
@@ -96,6 +107,16 @@ public class Frame {
 
         GUIUtils.drawImage(new ResourceLocation("icons/" + category.name() + ".png"), x + 84, y + 2, 12, 12);
 
+        if (ClickGui.catEars.getValue()) {
+            Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("cat/ear-1.png"));
+            GlStateManager.color(ClickGui.color.getColor().getRed() / 255.f, ClickGui.color.getColor().getGreen() / 255.f, ClickGui.color.getColor().getBlue() / 255.f, 1.0F);
+            Gui.drawScaledCustomSizeModalRect(x - 6, y - 8, 0, 0, 20, 20, 20, 20, 20, 20);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("cat/ear-2.png"));
+            GlStateManager.color(ClickGui.color.getColor().getRed() / 255.f, ClickGui.color.getColor().getGreen() / 255.f, ClickGui.color.getColor().getBlue() / 255.f, 1.0F);
+            Gui.drawScaledCustomSizeModalRect(x + 84, y - 8, 0, 0, 20, 20, 20, 20, 20, 20);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+
         if (this.open && !this.components.isEmpty()) {
             if (this.components.size() > (int) this.cntComp) {
                 int n = 0;
@@ -105,9 +126,8 @@ public class Frame {
                 }
                 this.cntComp += 0.14;
             } else {
-                for (int i = 0; i < this.components.size(); ++i) {
-                    ((Component) this.components.get(i)).renderComponent();
-
+                for (Object component : this.components) {
+                    ((Component) component).renderComponent();
                 }
             }
         }
@@ -154,17 +174,5 @@ public class Frame {
 
     public ArrayList getComponents() {
         return this.components;
-    }
-
-    public static void getModCount() {
-        int size = ModuleManager.getModules().size();
-
-        for (int i = 0; i < size; ++i) {
-            final Module m = ModuleManager.getModules().get(i);
-
-            if (m != null) {
-
-            }
-        }
     }
 }

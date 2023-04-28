@@ -4,32 +4,29 @@ import com.thnkscj.toolkit.gui.GUIUtils;
 import com.thnkscj.toolkit.gui.click.Gui;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
+import com.thnkscj.toolkit.setting.settings.BooleanSetting;
 import com.thnkscj.toolkit.setting.settings.ColorSetting;
 import com.thnkscj.toolkit.setting.settings.EnumSetting;
+import com.thnkscj.toolkit.setting.settings.IntegerSetting;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 
 public class ClickGui extends Module {
+    public static BooleanSetting catEars = new BooleanSetting("CatEars", "", true);
+    public static IntegerSetting animationSpeed = new IntegerSetting("Animation Speed", "", 1, 3, 10);
+    public static ColorSetting color = new ColorSetting("Foreground", "", new Color(151, 24, 255), false);
+    public static ColorSetting color2 = new ColorSetting("Background", "", new Color(0, 0, 0, 100), false);
+    public static EnumSetting<fontEnum> font = new EnumSetting<>("Font", "", fontEnum.Greycliff);
+    public static EnumSetting<BackgroundEnum> background = new EnumSetting<>("BackgroundMode", "", BackgroundEnum.Gradient);
+
     public ClickGui() {
         super("ClickGui", "", Category.CLIENT);
         setBind(Keyboard.KEY_RSHIFT);
 
-        addSettings(color, color2, font, background);
+        addSettings(catEars, color, color2, font, background, animationSpeed);
     }
-
-    public enum fontEnum {Blazma, Comfortaa, Greycliff, Tektur}
-
-    public enum formatEnum {Plain, Bold, Italic, BoldItalic}
-
-    public enum BackgroundEnum {None, Static, Blur, Both, Gradient, RainbowGradient, Dark, Blark}
-
-    public ColorSetting color = new ColorSetting("Foreground", "", new Color(151, 24, 255), false);
-    public ColorSetting color2 = new ColorSetting("Background", "", new Color(0, 0, 0, 100), false);
-    public EnumSetting<fontEnum> font = new EnumSetting<>("Font", "", fontEnum.Greycliff);
-    public EnumSetting<formatEnum> format = new EnumSetting<>("Format", "", formatEnum.Bold);
-    public EnumSetting<BackgroundEnum> background = new EnumSetting<>("BackgroundMode", "", BackgroundEnum.Gradient);
 
     @Override
     public void onEnable() {
@@ -66,4 +63,8 @@ public class ClickGui extends Module {
         } catch (Exception ignored) {
         }
     }
+
+    public enum fontEnum {Blazma, Comfortaa, Greycliff, Tektur}
+
+    public enum BackgroundEnum {None, Static, Blur, Both, Gradient, RainbowGradient, Dark, Blark}
 }

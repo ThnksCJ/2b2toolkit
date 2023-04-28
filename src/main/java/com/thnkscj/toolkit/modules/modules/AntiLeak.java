@@ -15,6 +15,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AntiLeak extends Module {
+    public static Dimension dimension = Dimension.OVERWORLD;
+    public static BlockPos offsetRand = new BlockPos(69, 69, 69);
+    public static BooleanSetting textureRot = new BooleanSetting("Texture Rotation", "Hide texture rotation", false);
+    public static BooleanSetting fthreeHidden = new BooleanSetting("F3 Hidden", "Hide F3", false);
+    public static BooleanSetting terrainHidden = new BooleanSetting("Terrain Hidden", "Hide terrain", false);
+    public static IntegerSetting terrainRenderCutoff = new IntegerSetting("Terrain Render Cutoff", "Cutoff for terrain rendering", 5, 40, 100);
+    static long worldSeedOverworld = -4172144997902289642L;
+    static long worldSeedNether = 146008555100680L;
+    static MCVersion version = MCVersion.v1_12_2;
+    public static BiomeSource biomeSource = BiomeSource.of(dimension, version, worldSeedOverworld);
+    int lastDim;
+    private boolean isTextureRot = false;
+    private boolean isTerrainHidden = false;
+    private int isTerrainRenderCutoff = terrainRenderCutoff.getValue();
 
     public AntiLeak() {
         super("AntiLeak", "Dont leak ur base cords and stuff lol", Category.CLIENT);
@@ -22,23 +36,29 @@ public class AntiLeak extends Module {
         addSettings(textureRot, fthreeHidden, terrainHidden, terrainRenderCutoff);
     }
 
-    static long worldSeedOverworld = -4172144997902289642L;
-    static long worldSeedNether = 146008555100680L;
-    int lastDim;
-    static MCVersion version = MCVersion.v1_12_2;
-    public static Dimension dimension = Dimension.OVERWORLD;
-    public static BiomeSource biomeSource = BiomeSource.of(dimension, version, worldSeedOverworld);
+    private static void reload(boolean soft) {
+        if (soft) {
+            int x = (int) mc.player.posX;
+            int y = (int) mc.player.posY;
+            int z = (int) mc.player.posZ;
+            int d = mc.gameSettings.renderDistanceChunks * 16;
+            mc.renderGlobal.markBlockRangeForRenderUpdate(x - d, y - d, z - d, x + d, y + d, z + d);
+            return;
+        }
 
-    public static BlockPos offsetRand = new BlockPos(69, 69, 69);
+        mc.renderGlobal.loadRenderers();
+    }
 
-    public static BooleanSetting textureRot = new BooleanSetting("Texture Rotation", "Hide texture rotation", false);
-    public static BooleanSetting fthreeHidden = new BooleanSetting("F3 Hidden", "Hide F3", false);
-    public static BooleanSetting terrainHidden = new BooleanSetting("Terrain Hidden", "Hide terrain", false);
-    public static IntegerSetting terrainRenderCutoff = new IntegerSetting("Terrain Render Cutoff", "Cutoff for terrain rendering", 5, 40, 100);
+    public static void sync() {
+        if (PlayerUtil.nullcheck())
+            return;
 
-    private boolean isTextureRot = false;
-    private boolean isTerrainHidden = false;
-    private int isTerrainRenderCutoff = terrainRenderCutoff.getValue();
+        if (mc.player.dimension == 0) {
+            biomeSource = BiomeSource.of(dimension, version, worldSeedOverworld);
+        } else {
+            biomeSource = BiomeSource.of(dimension, version, worldSeedNether);
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -72,36 +92,12 @@ public class AntiLeak extends Module {
         }
     }
 
-    private static void reload(boolean soft) {
-        if (soft) {
-            int x = (int) mc.player.posX;
-            int y = (int) mc.player.posY;
-            int z = (int) mc.player.posZ;
-            int d = mc.gameSettings.renderDistanceChunks * 16;
-            mc.renderGlobal.markBlockRangeForRenderUpdate(x - d, y - d, z - d, x + d, y + d, z + d);
-            return;
-        }
-
-        mc.renderGlobal.loadRenderers();
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDebugRender(RenderGameOverlayEvent event) {
         if (fthreeHidden.getValue()) {
             if (event.getType() != null && event.getType().equals(RenderGameOverlayEvent.ElementType.DEBUG)) {
                 event.setCanceled(true);
             }
-        }
-    }
-
-    public static void sync() {
-        if (PlayerUtil.nullcheck())
-            return;
-
-        if (mc.player.dimension == 0) {
-            biomeSource = BiomeSource.of(dimension, version, worldSeedOverworld);
-        } else {
-            biomeSource = BiomeSource.of(dimension, version, worldSeedNether);
         }
     }
 

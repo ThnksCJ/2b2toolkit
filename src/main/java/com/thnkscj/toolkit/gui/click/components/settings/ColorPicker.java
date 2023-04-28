@@ -21,10 +21,6 @@ public class ColorPicker extends com.thnkscj.toolkit.gui.click.components.Compon
     int x;
     int y;
     int offset;
-    private Color finalColor;
-    private Color oldColor;
-    private boolean pickeingColor;
-    private float triangleSize = 0;
     boolean pickingColor = false;
     boolean pickingHue = false;
     boolean pickingAlpha = false;
@@ -33,6 +29,10 @@ public class ColorPicker extends com.thnkscj.toolkit.gui.click.components.Compon
     int my;
     int radius = 0;
     int hueY;
+    private Color finalColor;
+    private Color oldColor;
+    private boolean pickeingColor;
+    private float triangleSize = 0;
     private boolean pipette = false;
     private float hoveredWidth = 1;
     private boolean hovered2;
@@ -45,6 +45,46 @@ public class ColorPicker extends com.thnkscj.toolkit.gui.click.components.Compon
         this.offset = n;
         this.hueY = parent.parent.getY() + offset + 20;
         this.finalColor = setting.getColor();
+    }
+
+    public static boolean mouseOver(int minX, int minY, int maxX, int maxY, int mX, int mY) {
+        return mX >= minX && mY >= minY && mX <= maxX && mY <= maxY;
+    }
+
+    public static Color getColor(Color color, float alpha) {
+        final float red = (float) color.getRed() / 255;
+        final float green = (float) color.getGreen() / 255;
+        final float blue = (float) color.getBlue() / 255;
+        return new Color(red, green, blue, alpha);
+    }
+
+    public static void drawPickerBase(int pickerX, int pickerY, int pickerWidth, int pickerHeight, float red, float green, float blue, float alpha) {
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glShadeModel(GL_SMOOTH);
+        glBegin(GL_POLYGON);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        glVertex2f(pickerX, pickerY);
+        glVertex2f(pickerX, pickerY + pickerHeight);
+        glColor4f(red, green, blue, alpha);
+        glVertex2f(pickerX + pickerWidth, pickerY + pickerHeight);
+        glVertex2f(pickerX + pickerWidth, pickerY);
+        glEnd();
+        glDisable(GL_ALPHA_TEST);
+        glBegin(GL_POLYGON);
+        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+        glVertex2f(pickerX, pickerY);
+        glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        glVertex2f(pickerX, pickerY + pickerHeight);
+        glVertex2f(pickerX + pickerWidth, pickerY + pickerHeight);
+        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+        glVertex2f(pickerX + pickerWidth, pickerY);
+        glEnd();
+        glEnable(GL_ALPHA_TEST);
+        glShadeModel(GL_FLAT);
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
     }
 
     public boolean isMouseOnButton2(int n, int n2) {
@@ -129,7 +169,6 @@ public class ColorPicker extends com.thnkscj.toolkit.gui.click.components.Compon
     public void setOff(int n) {
         this.offset = n;
     }
-
 
     public void drawPicker(ColorSetting setting, int mouseX, int mouseY) {
         float[] color = new float[]{
@@ -259,48 +298,6 @@ public class ColorPicker extends com.thnkscj.toolkit.gui.click.components.Compon
         if (colorSetting.rainbow) {
             GUIUtils.drawImage(new ResourceLocation("icons/check.png"), this.parent.parent.getX() + 75, this.parent.parent.getY() + offset + 96, 8, 8);
         }
-    }
-
-
-    public static boolean mouseOver(int minX, int minY, int maxX, int maxY, int mX, int mY) {
-        return mX >= minX && mY >= minY && mX <= maxX && mY <= maxY;
-    }
-
-
-    public static Color getColor(Color color, float alpha) {
-        final float red = (float) color.getRed() / 255;
-        final float green = (float) color.getGreen() / 255;
-        final float blue = (float) color.getBlue() / 255;
-        return new Color(red, green, blue, alpha);
-    }
-
-    public static void drawPickerBase(int pickerX, int pickerY, int pickerWidth, int pickerHeight, float red, float green, float blue, float alpha) {
-        glEnable(GL_BLEND);
-        glDisable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glShadeModel(GL_SMOOTH);
-        glBegin(GL_POLYGON);
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        glVertex2f(pickerX, pickerY);
-        glVertex2f(pickerX, pickerY + pickerHeight);
-        glColor4f(red, green, blue, alpha);
-        glVertex2f(pickerX + pickerWidth, pickerY + pickerHeight);
-        glVertex2f(pickerX + pickerWidth, pickerY);
-        glEnd();
-        glDisable(GL_ALPHA_TEST);
-        glBegin(GL_POLYGON);
-        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-        glVertex2f(pickerX, pickerY);
-        glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-        glVertex2f(pickerX, pickerY + pickerHeight);
-        glVertex2f(pickerX + pickerWidth, pickerY + pickerHeight);
-        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-        glVertex2f(pickerX + pickerWidth, pickerY);
-        glEnd();
-        glEnable(GL_ALPHA_TEST);
-        glShadeModel(GL_FLAT);
-        glEnable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
     }
 
     public void drawHueSlider(int x, int y, int width, int height, float hue) {

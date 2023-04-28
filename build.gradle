@@ -50,6 +50,15 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
+    maven {
+        url "https://maven.seedfinding.com/"
+    }
+    maven {
+        url "https://maven-snapshots.seedfinding.com/"
+    }
+    maven {
+        url "https://maven.latticg.com/"
+    }
 }
 
 
@@ -61,14 +70,12 @@ dependencies {
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
-    compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'com.github.hube12:SEED:master-SNAPSHOT'
     implementation 'javazoom:jlayer:1.0.1'
-}
-
-task getDeps(type: Copy) {
-    from sourceSets.main.runtimeClasspath
-    into 'runtime/'
+    compile 'com.github.KaptainWutax:BiomeUtils:master-SNAPSHOT'
+    compile 'com.github.KaptainWutax:SeedUtils:master-SNAPSHOT'
+    compile 'com.github.KaptainWutax:MCUtils:master-SNAPSHOT'
+    compile 'com.github.KaptainWutax:NoiseUtils:main-SNAPSHOT'
 }
 
 shadowJar {

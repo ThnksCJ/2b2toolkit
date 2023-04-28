@@ -9,16 +9,14 @@ import com.thnkscj.toolkit.modules.ModuleManager;
 import com.thnkscj.toolkit.modules.modules.ClickGui;
 
 public class Init {
+    public static final long startTime = System.nanoTime();
     public static Thread thread;
-
     public static EventManger eventManger;
     public static CommandManager commandManager;
     public static ModuleManager moduleManager;
     public static FriendManager friendManager;
     public static ClickGui clickGui;
     public static SaveLoad saveLoad;
-
-    public static final long startTime = System.nanoTime();
 
     public static void loadMessage() {
         Toolkit.log.info("************************************");

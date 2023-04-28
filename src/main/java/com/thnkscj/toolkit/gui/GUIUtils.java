@@ -1,6 +1,6 @@
 package com.thnkscj.toolkit.gui;
 
-import com.thnkscj.toolkit.gui.Font.FontRenderer;
+import com.thnkscj.toolkit.gui.font.FontRenderer;
 import com.thnkscj.toolkit.modules.ModuleManager;
 import com.thnkscj.toolkit.modules.modules.ClickGui;
 import net.minecraft.client.Minecraft;
@@ -68,8 +68,6 @@ public class GUIUtils extends Gui {
         tessellator.draw();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-
-
     }
 
 

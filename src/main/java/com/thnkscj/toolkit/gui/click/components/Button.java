@@ -3,13 +3,11 @@ package com.thnkscj.toolkit.gui.click.components;
 import com.thnkscj.toolkit.gui.GUIUtils;
 import com.thnkscj.toolkit.gui.click.Gui;
 import com.thnkscj.toolkit.gui.click.components.settings.*;
-import com.thnkscj.toolkit.gui.click.components.settings.*;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.modules.ModuleManager;
 import com.thnkscj.toolkit.setting.Setting;
 import com.thnkscj.toolkit.setting.settings.*;
-import com.thnkscj.toolkit.setting.settings.*;
-import com.thnkscj.toolkit.util.misc.TimerUtil;
+import com.thnkscj.toolkit.util.misc.Timer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,20 +22,20 @@ import java.util.ArrayList;
 import static com.thnkscj.toolkit.util.Wrapper.mc;
 
 public class Button extends Component {
+    private final int height;
+    private final int alpha = 0;
     public int inUp = 0;
     public boolean open;
     public int offset;
     public Module mod;
     public Frame parent;
-    private final int height;
     public boolean isHovered;
     public ArrayList subcomponents;
-    private final int alpha = 0;
-    private float anim = 0;
-    private int openAnim = 0;
     int mouseX;
     int mouseY;
-    TimerUtil timer = new TimerUtil();
+    Timer timer = new Timer();
+    private float anim = 0;
+    private int openAnim = 0;
     private boolean pickingKey;
     private float hoveredWidth = 1;
     private boolean hovered2;
@@ -195,7 +193,7 @@ public class Button extends Component {
             component.keyTyped(c, n);
         }
         if (open) {
-            if (pickingKey && n != 14) {
+            if (pickingKey && n != 14 && n != 211) {
                 mod.setBind(n);
                 pickingKey = false;
             } else if (pickingKey) {
