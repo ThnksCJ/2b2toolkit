@@ -2,9 +2,12 @@ package com.thnkscj.toolkit.util.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -12,7 +15,6 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL32;
-import org.lwjgl.util.vector.Quaternion;
 
 import java.awt.*;
 import java.util.List;
@@ -24,66 +26,7 @@ public class RenderUtil {
     public static Tessellator tessellator;
     public static BufferBuilder builder;
     public static Minecraft mc = Minecraft.getMinecraft();
-    public static int[][][] cubletLookup = {
-            {
-                    {17, 9, 0},
-                    {20, 16, 3},
-                    {23, 15, 6}
-            },
-            {
-                    {18, 10, 1},
-                    {21, -1, 4},
-                    {24, 14, 7}
-            },
-            {
-                    {19, 11, 2},
-                    {22, 12, 5},
-                    {25, 13, 8}
-            }
-    };
-    public static int[][] cubeSides = {
-            {0, 1, 2, 3, 4, 5, 6, 7, 8},
-            {19, 18, 17, 22, 21, 20, 25, 24, 23},
-            {0, 1, 2, 9, 10, 11, 17, 18, 19},
-            {23, 24, 25, 15, 14, 13, 6, 7, 8},
-            {17, 9, 0, 20, 16, 3, 23, 15, 6},
-            {2, 11, 19, 5, 12, 22, 8, 13, 25}
-    };
-    public static int[][] cubeSideTransforms = {
-            {0, 0, 1},
-            {0, 0, -1},
-            {0, 1, 0},
-            {0, -1, 0},
-            {-1, 0, 0},
-            {1, 0, 0}
-    };
-    public static Quaternion[] cubeletStatus = {new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion(),
-            new Quaternion()
-    };
+    private static final ICamera camera = new Frustum();
 
     static {
         tessellator = Tessellator.getInstance();
@@ -461,6 +404,14 @@ public class RenderUtil {
         return new AxisAlignedBB(pos.getX() - mc.getRenderManager().viewerPosX, pos.getY() - mc.getRenderManager().viewerPosY, pos.getZ() - mc.getRenderManager().viewerPosZ, pos.getX() + 1 - mc.getRenderManager().viewerPosX, pos.getY() + 1 - mc.getRenderManager().viewerPosY, pos.getZ() + 1 - mc.getRenderManager().viewerPosZ);
     }
 
+    public static boolean isTileEntityVisible(TileEntity tileEntity) {
+        if (mc.getRenderViewEntity() == null)
+            return false;
+
+        camera.setPosition(mc.getRenderViewEntity().posX, mc.getRenderViewEntity().posY, mc.getRenderViewEntity().posZ);
+        return camera.isBoundingBoxInFrustum(mc.world.getBlockState(tileEntity.getPos()).getSelectedBoundingBox(mc.world, tileEntity.getPos()));
+    }
+
     public static void connectPoints(float xOne, float yOne, float xTwo, float yTwo) {
         glPushMatrix();
         glEnable(GL_LINE_SMOOTH);
@@ -748,6 +699,50 @@ public class RenderUtil {
         GlStateManager.glVertex3f((float) boundingBox.minX, (float) boundingBox.minY, (float) boundingBox.maxZ);
         GlStateManager.glVertex3f((float) boundingBox.maxX, (float) boundingBox.minY, (float) boundingBox.maxZ);
         GlStateManager.glEnd();
+    }
+
+    public static void outlineBox(AxisAlignedBB a, Color boxColor, Color outlineColor, float lineWidth, float alpha, float scale, double slab) {
+        double f = 0.5 * (1 - scale);
+        AxisAlignedBB bb = RenderUtil.interpolateAxis(new AxisAlignedBB(a.minX + f, a.minY + f + (1 - slab), a.minZ + f, a.maxX - f, a.maxY - f, a.maxZ - f));
+        float rO = (float) outlineColor.getRed() / 255.0f;
+        float gO = (float) outlineColor.getGreen() / 255.0f;
+        float bO = (float) outlineColor.getBlue() / 255.0f;
+        float aO = (float) outlineColor.getAlpha() / 255.0f;
+
+        if (alpha > 1) alpha = 1;
+        aO *= alpha;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
+        GlStateManager.disableTexture2D();
+        GL11.glEnable(2848);
+        GL11.glHint(3154, 4354);
+        GL11.glLineWidth(lineWidth);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(3, DefaultVertexFormats.POSITION_COLOR);
+        bufferbuilder.pos(bb.minX, bb.minY, bb.minZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.minX, bb.minY, bb.maxZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.maxX, bb.minY, bb.maxZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.maxX, bb.minY, bb.minZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.minX, bb.minY, bb.minZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.minX, bb.maxY, bb.minZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.minX, bb.maxY, bb.maxZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.minX, bb.minY, bb.maxZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.maxX, bb.minY, bb.maxZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.maxX, bb.maxY, bb.maxZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.minX, bb.maxY, bb.maxZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.maxX, bb.maxY, bb.maxZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.maxX, bb.maxY, bb.minZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.maxX, bb.minY, bb.minZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.maxX, bb.maxY, bb.minZ).color(rO, gO, bO, aO).endVertex();
+        bufferbuilder.pos(bb.minX, bb.maxY, bb.minZ).color(rO, gO, bO, aO).endVertex();
+        tessellator.draw();
+        GL11.glDisable(2848);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
     public static double easeInOutCubic(double t) {

@@ -1,7 +1,8 @@
 package com.thnkscj.toolkit.modules;
 
 public enum Category {
-    CLIENT("Client");
+    CLIENT("Client"),
+    HUD("HUD");
 
     public final String ModuleName;
 

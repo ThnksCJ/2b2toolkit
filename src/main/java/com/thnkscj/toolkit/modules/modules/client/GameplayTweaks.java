@@ -1,5 +1,6 @@
-package com.thnkscj.toolkit.modules.modules;
+package com.thnkscj.toolkit.modules.modules.client;
 
+import com.thnkscj.toolkit.gui.GUIUtils;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.modules.ModuleManager;
@@ -66,21 +67,9 @@ public class GameplayTweaks extends Module {
                     GlStateManager.disableBlend();
                 }
                 return;
-            } else if (part.equals("2b2toolkit")) {
+            } else if (part.contains("2b2toolkit")) {
                 mc.getTextureManager().bindTexture(new ResourceLocation("icons/2b2toolkit.png"));
-
-                float y = (float) (((float) -i1 * 9) - 8.5);
-                float f = 1.0F / 64.0F;
-                float f1 = 1.0F / 64.0F;
-
-                Tessellator tessellator = Tessellator.getInstance();
-                BufferBuilder bufferbuilder = tessellator.getBuffer();
-                bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-                bufferbuilder.pos(0, y + 8, 0.0D).tex(8.0F * f, (8.0F + 8) * f1).endVertex();
-                bufferbuilder.pos(8, y + 8, 0.0D).tex((8.0F + 8) * f, (8.0F + 8) * f1).endVertex();
-                bufferbuilder.pos(8, y, 0.0D).tex((8.0F + 8) * f, 8.0F * f1).endVertex();
-                bufferbuilder.pos(0, y, 0.0D).tex(8.0F * f, 8.0F * f1).endVertex();
-                tessellator.draw();
+                GUIUtils.drawScaledCustomSizeModalRect(0, (int) (((float) -i1 * 9) - 8.5), 0, 0, 64, 64, 8, 8, 64, 64);
 
                 GlStateManager.enableBlend();
                 mc.fontRenderer.drawStringWithShadow(s, 10.0F, (float) (-i1 * 9 - 8), 16777215 + (l1 << 24));

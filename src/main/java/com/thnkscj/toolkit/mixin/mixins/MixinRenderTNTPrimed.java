@@ -2,7 +2,7 @@ package com.thnkscj.toolkit.mixin.mixins;
 
 import com.thnkscj.toolkit.mixin.Precedence;
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.TNTHelper;
+import com.thnkscj.toolkit.modules.modules.client.TNTHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;

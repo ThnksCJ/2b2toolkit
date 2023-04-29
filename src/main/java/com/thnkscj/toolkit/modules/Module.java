@@ -2,7 +2,7 @@ package com.thnkscj.toolkit.modules;
 
 import com.thnkscj.toolkit.command.Command;
 import com.thnkscj.toolkit.event.events.render.Render2DEvent;
-import com.thnkscj.toolkit.modules.modules.Notifications;
+import com.thnkscj.toolkit.modules.modules.client.Notifications;
 import com.thnkscj.toolkit.setting.Setting;
 import com.thnkscj.toolkit.util.entity.PlayerUtil;
 import net.minecraft.client.Minecraft;
@@ -60,7 +60,6 @@ public abstract class Module {
     public void setBind(int b) {
         bind = b;
     }
-
 
     public Category getCategory() {
         return this.category;

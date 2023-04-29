@@ -5,7 +5,7 @@ import com.thnkscj.toolkit.gui.click.Gui;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.ClickGui;
+import com.thnkscj.toolkit.modules.modules.client.ClickGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;

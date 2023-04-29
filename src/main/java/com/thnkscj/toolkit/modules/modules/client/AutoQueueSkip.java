@@ -1,4 +1,4 @@
-package com.thnkscj.toolkit.modules.modules;
+package com.thnkscj.toolkit.modules.modules.client;
 
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;

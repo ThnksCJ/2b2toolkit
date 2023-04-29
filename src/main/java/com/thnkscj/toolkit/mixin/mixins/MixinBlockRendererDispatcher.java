@@ -3,7 +3,7 @@ package com.thnkscj.toolkit.mixin.mixins;
 import com.thnkscj.toolkit.event.events.block.RenderBlockEvent;
 import com.thnkscj.toolkit.mixin.Precedence;
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.AntiLeak;
+import com.thnkscj.toolkit.modules.modules.client.AntiLeak;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;

@@ -47,22 +47,12 @@ repositories {
         name = 'spongepowered-repo'
         url = 'https://repo.spongepowered.org/maven/'
     }
-    maven {
-        url "https://jitpack.io"
-    }
-    maven {
-        url "https://maven.seedfinding.com/"
-    }
-    maven {
-        url "https://maven-snapshots.seedfinding.com/"
-    }
-    maven {
-        url "https://maven.latticg.com/"
-    }
+    maven { url 'https://jitpack.io' }
 }
 
 
 dependencies {
+    implementation 'org.jetbrains:annotations:24.0.0'
     compile group: "com.googlecode.json-simple", name: "json-simple", version: "1.1.1"
     compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'launchwrapper'
@@ -70,20 +60,12 @@ dependencies {
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
-    compile 'com.github.hube12:SEED:master-SNAPSHOT'
     implementation 'javazoom:jlayer:1.0.1'
-    compile 'com.github.KaptainWutax:BiomeUtils:master-SNAPSHOT'
-    compile 'com.github.KaptainWutax:SeedUtils:master-SNAPSHOT'
-    compile 'com.github.KaptainWutax:MCUtils:master-SNAPSHOT'
-    compile 'com.github.KaptainWutax:NoiseUtils:main-SNAPSHOT'
 }
 
 shadowJar {
     dependencies {
-        include(dependency('com.googlecode.json-simple:json-simple:1.1.1'))
-        include(dependency('org.spongepowered:mixin'))
-        include(dependency('javazoom:jlayer:1.0.1'))
-        include(dependency('com.github.hube12:SEED:master-SNAPSHOT'))
+
     }
 
     exclude 'dummyThing'

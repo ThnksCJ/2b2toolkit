@@ -4,7 +4,7 @@ import com.thnkscj.toolkit.event.events.entity.LivingUpdateEvent;
 import com.thnkscj.toolkit.event.events.entity.PlayerMoveEvent;
 import com.thnkscj.toolkit.mixin.Precedence;
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.ElytraFly;
+import com.thnkscj.toolkit.modules.modules.client.ElytraFly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -33,10 +33,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
     @Inject(method={"move"}, at={@At(value="HEAD")}, cancellable=true)
     public void move(MoverType moverType, double x, double y, double z, CallbackInfo cb) {
-        ElytraFly efly = ModuleManager.getModule(ElytraFly.class);
-        if (efly.isEnabled()) {
-            if(ElytraFly.timerTakeoff.isEnabled() && !efly.tookOff)
-                return;
+        if (ModuleManager.getModule(ElytraFly.class).isEnabled()) {
             cb.cancel();
             EntityPlayerSP player = mc.player;
 

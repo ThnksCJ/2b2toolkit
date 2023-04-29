@@ -1,4 +1,4 @@
-package com.thnkscj.toolkit.modules.modules;
+package com.thnkscj.toolkit.modules.modules.client;
 
 import com.thnkscj.toolkit.gui.GUIUtils;
 import com.thnkscj.toolkit.gui.click.Gui;
@@ -41,7 +41,7 @@ public class ClickGui extends Module {
         t.start();
     }
 
-    public void loadShader() {
+    public static void loadShader() {
         if (background.getValue() == BackgroundEnum.Blur || background.getValue() == BackgroundEnum.Both) {
             mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blark.json"));
         }

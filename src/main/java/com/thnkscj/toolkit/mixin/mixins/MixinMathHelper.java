@@ -2,7 +2,7 @@ package com.thnkscj.toolkit.mixin.mixins;
 
 import com.thnkscj.toolkit.mixin.Precedence;
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.AntiLeak;
+import com.thnkscj.toolkit.modules.modules.client.AntiLeak;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -4,7 +4,7 @@ import com.thnkscj.toolkit.gui.GUIUtils;
 import com.thnkscj.toolkit.gui.click.Gui;
 import com.thnkscj.toolkit.gui.click.components.Button;
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.ClickGui;
+import com.thnkscj.toolkit.modules.modules.client.ClickGui;
 import com.thnkscj.toolkit.setting.settings.EnumSetting;
 import com.thnkscj.toolkit.util.misc.ColorUtil;
 import net.minecraft.client.Minecraft;

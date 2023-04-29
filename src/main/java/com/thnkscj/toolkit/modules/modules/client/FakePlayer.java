@@ -1,4 +1,4 @@
-package com.thnkscj.toolkit.modules.modules;
+package com.thnkscj.toolkit.modules.modules.client;
 
 import com.mojang.authlib.GameProfile;
 import com.thnkscj.toolkit.modules.Category;

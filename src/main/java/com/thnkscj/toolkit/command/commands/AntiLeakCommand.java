@@ -1,7 +1,7 @@
 package com.thnkscj.toolkit.command.commands;
 
 import com.thnkscj.toolkit.command.Command;
-import com.thnkscj.toolkit.modules.modules.AntiLeak;
+import com.thnkscj.toolkit.modules.modules.client.AntiLeak;
 import net.minecraft.util.math.BlockPos;
 
 public class AntiLeakCommand extends Command {

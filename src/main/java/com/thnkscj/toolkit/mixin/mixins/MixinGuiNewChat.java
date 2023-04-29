@@ -1,6 +1,6 @@
 package com.thnkscj.toolkit.mixin.mixins;
 
-import com.thnkscj.toolkit.modules.modules.GameplayTweaks;
+import com.thnkscj.toolkit.modules.modules.client.GameplayTweaks;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.renderer.GlStateManager;

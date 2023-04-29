@@ -2,7 +2,7 @@ package com.thnkscj.toolkit.gui;
 
 import com.thnkscj.toolkit.gui.font.FontRenderer;
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.ClickGui;
+import com.thnkscj.toolkit.modules.modules.client.ClickGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;

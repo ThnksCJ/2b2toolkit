@@ -6,7 +6,7 @@ import com.thnkscj.toolkit.config.SaveLoad;
 import com.thnkscj.toolkit.event.EventManger;
 import com.thnkscj.toolkit.manager.FriendManager;
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.ClickGui;
+import com.thnkscj.toolkit.modules.modules.client.ClickGui;
 
 public class Init {
     public static final long startTime = System.nanoTime();

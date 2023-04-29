@@ -1,11 +1,13 @@
-package com.thnkscj.toolkit.modules.modules;
+package com.thnkscj.toolkit.modules.modules.client;
 
 import com.thnkscj.toolkit.command.Command;
 import com.thnkscj.toolkit.event.events.entity.LivingUpdateEvent;
+import com.thnkscj.toolkit.event.events.render.Render2DEvent;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.setting.settings.BooleanSetting;
 import com.thnkscj.toolkit.setting.settings.DoubleSetting;
+import com.thnkscj.toolkit.setting.settings.EnumSetting;
 import com.thnkscj.toolkit.setting.settings.IntegerSetting;
 import com.thnkscj.toolkit.util.misc.Timer;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -19,7 +21,7 @@ public class ElytraFly extends Module {
     public ElytraFly() {
         super("ElytraFly", "Fly with elytra", Category.CLIENT);
 
-        addSettings(speed, accelerationTime, fast, timerTakeoff, autoJump, timerSpeed);
+        addSettings(speed, timerTakeoff, autoJump, timerSpeed);
     }
 
     private static final float MOVE_FRICTION = 4.02f;
@@ -27,9 +29,12 @@ public class ElytraFly extends Module {
     private static final float LIVING_UPDATE_FRICTION = 3.170326f;
 
 
+    // for testing speed won't do anything for now
     public static IntegerSetting speed = new IntegerSetting("Speed", "How fast u wanna go", 1, 10, 20);
-    public static IntegerSetting accelerationTime = new IntegerSetting("Acceleration", "Acceleration ticks", 0, 0, 250);
-    public static BooleanSetting fast = new BooleanSetting("Fast", "Higher base friction", false);
+
+    public static EnumSetting<Base> base = new EnumSetting<>("Base", "Base speed", Base.Normal);
+    public static EnumSetting<Acceleration> acceleration = new EnumSetting<>("Acceleration", "Acceleration mode", Acceleration.Jump);
+
     public static BooleanSetting timerTakeoff = new BooleanSetting("TimerTakeoff", "Auto takeoff with timer", false);
     public static BooleanSetting autoJump = new BooleanSetting("AutoJump", "Jump automatically when enabling efly", true);
     public static DoubleSetting timerSpeed = new DoubleSetting("TimerSpeed", "The timer speed for takeoff", 0.05, 0.25, 1.0);
@@ -37,8 +42,8 @@ public class ElytraFly extends Module {
     private static long lastOpenElytra = 0L;
     final DecimalFormat formatter = new DecimalFormat("#.#");
     private final Timer timer = new Timer();
-    private double PrevPosX;
-    private double PrevPosZ;
+    private double prevPosX;
+    private double prevPosZ;
 
     public boolean tookOff = false;
     private boolean checkTime = false;
@@ -60,8 +65,8 @@ public class ElytraFly extends Module {
     @Override
     public void onUpdate() {
         if (timer.passed(1000)) {
-            PrevPosX = mc.player.prevPosX;
-            PrevPosZ = mc.player.prevPosZ;
+            prevPosX = mc.player.prevPosX;
+            prevPosZ = mc.player.prevPosZ;
         }
 
         if(timerTakeoff.isEnabled() && !tookOff && (mc.player.isElytraFlying() || takeOffTimer.passed(3000) || mc.player.onGround) && checkTime){
@@ -83,17 +88,21 @@ public class ElytraFly extends Module {
                 ticks = 0;
             }
         }
+    }
 
-        final double deltaX = mc.player.posX - PrevPosX;
-        final double deltaZ = mc.player.posZ - PrevPosZ;
+    @Override
+    public void onRender2D(Render2DEvent event) {
+        final double deltaX = mc.player.posX - prevPosX;
+        final double deltaZ = mc.player.posZ - prevPosZ;
 
         float distance = MathHelper.sqrt(deltaX * deltaX + deltaZ * deltaZ);
 
         double BPS = distance * 20;
         double KMH = Math.floor((distance / 1000.0f) / (0.05f / 3600.0f));
 
-        Command.sendMessage("Speed: " + this.formatter.format(BPS) + " BPS");
-        Command.sendMessage("Speed " + this.formatter.format(KMH) + "km/h");
+        // these need to be put into a pos where i can be seen
+        mc.fontRenderer.drawStringWithShadow("Speed: " + this.formatter.format(BPS) + " BPS", 2, 2, 0xffffff);
+        mc.fontRenderer.drawStringWithShadow("Speed " + this.formatter.format(KMH) + "km/h", 2, 12, 0xffffff);
     }
 
     public void move(EntityPlayerSP player) {
@@ -103,9 +112,9 @@ public class ElytraFly extends Module {
         player.motionY = 0.0;
         player.motionZ = 0.0;
         player.moveForward = player.moveForward > 0.0f ? 1.0f : 0.0f;
-        float speed = ElytraFly.speed.getValue() * ((fast.isEnabled() ? MOVE_FAST : MOVE_FRICTION) / 10f);
-        float friction = accelerationTime.getValue() == 0 || ticks >= accelerationTime.getValue() ? speed : ticks * (speed / accelerationTime.getValue());
+        float friction = MOVE_FRICTION;
         player.moveRelative(0.0f, 0.0f, player.moveForward, friction);
+        Command.sendMessage("Move " + mc.player.moveForward);
     }
 
     @SubscribeEvent
@@ -116,9 +125,9 @@ public class ElytraFly extends Module {
             mc.player.motionX = 0.0;
             mc.player.motionY = (-0.03094695885314991);
             mc.player.motionZ = 0.0;
-            float speed = ElytraFly.speed.getValue() * (LIVING_UPDATE_FRICTION / 10f);
-            float friction = accelerationTime.getValue() == 0 || ticks >= accelerationTime.getValue() ? speed : ticks * (speed / accelerationTime.getValue());
+            float friction = LIVING_UPDATE_FRICTION;
             mc.player.moveRelative(0.0f, 0.0f, mc.player.moveForward, friction);
+            Command.sendMessage("Living Update " + mc.player.moveForward);
         }
 
         mc.player.prevRotationPitch = -2.0f;
@@ -127,5 +136,16 @@ public class ElytraFly extends Module {
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
             lastOpenElytra = System.currentTimeMillis();
         }
+    }
+
+    private enum Base {
+        Zero,
+        Normal,
+        Fast
+    }
+
+    private enum Acceleration {
+        Jump,
+        Smooth
     }
 }

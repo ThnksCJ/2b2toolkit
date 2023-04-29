@@ -1,7 +1,7 @@
 package com.thnkscj.toolkit.mixin.mixins;
 
 import com.thnkscj.toolkit.modules.ModuleManager;
-import com.thnkscj.toolkit.modules.modules.Clans;
+import com.thnkscj.toolkit.modules.modules.client.Clans;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.EntityRenderer;
 import org.spongepowered.asm.mixin.Mixin;
