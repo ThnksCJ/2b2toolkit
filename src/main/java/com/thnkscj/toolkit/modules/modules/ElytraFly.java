@@ -1,6 +1,7 @@
 package com.thnkscj.toolkit.modules.modules;
 
 import com.thnkscj.toolkit.command.Command;
+import com.thnkscj.toolkit.event.events.entity.LivingUpdateEvent;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.setting.settings.IntegerSetting;
@@ -8,6 +9,7 @@ import com.thnkscj.toolkit.util.misc.Timer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.text.DecimalFormat;
 
@@ -53,21 +55,20 @@ public class ElytraFly extends Module {
         player.moveRelative(0.0f, 0.0f, player.moveForward, 4.02f);
     }
 
-    public void fly() {
-        if (isEnabled() && mc.player.moveForward > 0.0f) {
+    @SubscribeEvent
+    public void onLivingUpdate(LivingUpdateEvent event) {
+        if (mc.player.moveForward > 0.0f) {
             mc.player.motionX = 0.0;
             mc.player.motionY = (-0.03094695885314991);
             mc.player.motionZ = 0.0;
             mc.player.moveRelative(0.0f, 0.0f, mc.player.moveForward, (3.170326f));
         }
 
-        if (isEnabled()) {
-            mc.player.prevRotationPitch = -2.0f;
-            mc.player.rotationPitch = -2.0f;
-            if (!mc.player.isElytraFlying() && System.currentTimeMillis() - lastOpenElytra > 2000L) {
-                mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
-                lastOpenElytra = System.currentTimeMillis();
-            }
+        mc.player.prevRotationPitch = -2.0f;
+        mc.player.rotationPitch = -2.0f;
+        if (!mc.player.isElytraFlying() && System.currentTimeMillis() - lastOpenElytra > 2000L) {
+            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
+            lastOpenElytra = System.currentTimeMillis();
         }
     }
 }

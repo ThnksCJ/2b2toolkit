@@ -1,5 +1,6 @@
 package com.thnkscj.toolkit.mixin.mixins;
 
+import com.thnkscj.toolkit.event.events.entity.LivingUpdateEvent;
 import com.thnkscj.toolkit.event.events.entity.PlayerMoveEvent;
 import com.thnkscj.toolkit.mixin.Precedence;
 import com.thnkscj.toolkit.modules.ModuleManager;
@@ -45,6 +46,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
     @Inject(method={"onLivingUpdate"}, at={@At(value="RETURN")})
     public void onLivingUpdate(CallbackInfo cb) {
-        ModuleManager.getModule(ElytraFly.class).fly();
+        LivingUpdateEvent livingUpdateEvent = new LivingUpdateEvent();
+        MinecraftForge.EVENT_BUS.post(livingUpdateEvent);
     }
 }

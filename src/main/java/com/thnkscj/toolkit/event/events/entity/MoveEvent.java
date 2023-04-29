@@ -1,16 +1,18 @@
 package com.thnkscj.toolkit.event.events.entity;
 
 import net.minecraft.entity.MoverType;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class PlayerMoveEvent extends Event {
+@Cancelable
+public class MoveEvent extends Event {
 
     private MoverType type;
     private double x;
     private double y;
     private double z;
 
-    public PlayerMoveEvent(MoverType moverType, double x, double y, double z) {
+    public MoveEvent(MoverType moverType, double x, double y, double z) {
         super();
         this.type = moverType;
         this.x = x;
