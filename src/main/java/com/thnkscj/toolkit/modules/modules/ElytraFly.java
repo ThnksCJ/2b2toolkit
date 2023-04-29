@@ -4,6 +4,8 @@ import com.thnkscj.toolkit.command.Command;
 import com.thnkscj.toolkit.event.events.entity.LivingUpdateEvent;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
+import com.thnkscj.toolkit.setting.settings.BooleanSetting;
+import com.thnkscj.toolkit.setting.settings.DoubleSetting;
 import com.thnkscj.toolkit.setting.settings.IntegerSetting;
 import com.thnkscj.toolkit.util.misc.Timer;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -17,10 +19,20 @@ public class ElytraFly extends Module {
     public ElytraFly() {
         super("ElytraFly", "Fly with elytra", Category.CLIENT);
 
-        addSettings(speed);
+        addSettings(speed, accelerationTime, fast, timerTakeoff, autoJump, timerSpeed);
     }
 
-    public static IntegerSetting speed = new IntegerSetting("Speed", "How fast u wanna go", 1, 2, 20);
+    private static final float MOVE_FRICTION = 4.02f;
+    private static final float MOVE_FAST = 4.31f;
+    private static final float LIVING_UPDATE_FRICTION = 3.170326f;
+
+
+    public static IntegerSetting speed = new IntegerSetting("Speed", "How fast u wanna go", 1, 10, 20);
+    public static IntegerSetting accelerationTime = new IntegerSetting("Acceleration", "Acceleration ticks", 0, 0, 250);
+    public static BooleanSetting fast = new BooleanSetting("Fast", "Higher base friction", false);
+    public static BooleanSetting timerTakeoff = new BooleanSetting("TimerTakeoff", "Auto takeoff with timer", false);
+    public static BooleanSetting autoJump = new BooleanSetting("AutoJump", "Jump automatically when enabling efly", true);
+    public static DoubleSetting timerSpeed = new DoubleSetting("TimerSpeed", "The timer speed for takeoff", 0.05, 0.25, 1.0);
 
     private static long lastOpenElytra = 0L;
     final DecimalFormat formatter = new DecimalFormat("#.#");
@@ -28,11 +40,48 @@ public class ElytraFly extends Module {
     private double PrevPosX;
     private double PrevPosZ;
 
+    public boolean tookOff = false;
+    private boolean checkTime = false;
+    private final Timer takeOffTimer = new Timer();
+
+    private long ticks = 0;
+
+    @Override
+    protected void onEnable() {
+        tookOff = false;
+        checkTime = false;
+        ticks = 0;
+        if(mc.player == null || mc.world == null)
+            return;
+        if(timerTakeoff.isEnabled() && mc.player.onGround && !tookOff && autoJump.isEnabled())
+            mc.player.jump();
+    }
+
     @Override
     public void onUpdate() {
         if (timer.passed(1000)) {
             PrevPosX = mc.player.prevPosX;
             PrevPosZ = mc.player.prevPosZ;
+        }
+
+        if(timerTakeoff.isEnabled() && !tookOff && (mc.player.isElytraFlying() || takeOffTimer.passed(3000) || mc.player.onGround) && checkTime){
+            mc.timer.tickLength = 50f;
+            tookOff = true;
+            checkTime = false;
+        }
+
+        if(timerTakeoff.isEnabled() && mc.player.motionY < 0 && !tookOff) {
+            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
+            mc.timer.tickLength = 50f / timerSpeed.getValue().floatValue();
+            checkTime = true;
+        }
+
+        if(tookOff){
+            if(mc.player.moveForward > 0.0f){
+                ticks++;
+            } else {
+                ticks = 0;
+            }
         }
 
         final double deltaX = mc.player.posX - PrevPosX;
@@ -48,20 +97,28 @@ public class ElytraFly extends Module {
     }
 
     public void move(EntityPlayerSP player) {
+        if(timerTakeoff.isEnabled() && !tookOff)
+            return;
         player.motionX = 0.0;
         player.motionY = 0.0;
         player.motionZ = 0.0;
         player.moveForward = player.moveForward > 0.0f ? 1.0f : 0.0f;
-        player.moveRelative(0.0f, 0.0f, player.moveForward, 4.02f);
+        float speed = ElytraFly.speed.getValue() * ((fast.isEnabled() ? MOVE_FAST : MOVE_FRICTION) / 10f);
+        float friction = accelerationTime.getValue() == 0 || ticks >= accelerationTime.getValue() ? speed : ticks * (speed / accelerationTime.getValue());
+        player.moveRelative(0.0f, 0.0f, player.moveForward, friction);
     }
 
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
+        if(timerTakeoff.isEnabled() && !tookOff)
+            return;
         if (mc.player.moveForward > 0.0f) {
             mc.player.motionX = 0.0;
             mc.player.motionY = (-0.03094695885314991);
             mc.player.motionZ = 0.0;
-            mc.player.moveRelative(0.0f, 0.0f, mc.player.moveForward, (3.170326f));
+            float speed = ElytraFly.speed.getValue() * (LIVING_UPDATE_FRICTION / 10f);
+            float friction = accelerationTime.getValue() == 0 || ticks >= accelerationTime.getValue() ? speed : ticks * (speed / accelerationTime.getValue());
+            mc.player.moveRelative(0.0f, 0.0f, mc.player.moveForward, friction);
         }
 
         mc.player.prevRotationPitch = -2.0f;
