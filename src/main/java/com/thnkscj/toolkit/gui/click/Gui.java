@@ -27,16 +27,6 @@ public class Gui extends GuiScreen {
         setInstance();
 
         frames = new ArrayList<>();
-        /*
-        int n = 30;
-        for (Category category : Category.values()) {
-            Frame frame = new Frame(category);
-            frame.setX(n);
-            frame.setY(10);
-            frames.add(frame);
-            n += frame.getWidth() + 5;
-        }
-         */
 
         Frame frame = new Frame(Category.CLIENT);
         frame.setX(30);

@@ -4,9 +4,11 @@ import com.thnkscj.toolkit.command.Command;
 import com.thnkscj.toolkit.command.CommandManager;
 import com.thnkscj.toolkit.event.events.network.PacketEvent;
 import com.thnkscj.toolkit.event.events.render.Render2DEvent;
+import com.thnkscj.toolkit.modules.HudModule;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.modules.ModuleManager;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -95,6 +97,36 @@ public class EventManger {
         for (Module module : ModuleManager.getModules()) {
             if (!module.isEnabled()) continue;
             module.onWorldRender(event);
+        }
+    }
+
+    @SubscribeEvent
+    public void renderText(RenderGameOverlayEvent.Text e) {
+        if (e.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
+            GlStateManager.pushMatrix();
+            double guiScale = mc.gameSettings.guiScale;
+            double defaultGuiScale = 0.5;
+            GlStateManager.scale(guiScale, guiScale, guiScale);
+
+            for (HudModule component : HudModule.components) {
+                if (component.shouldRender()) {
+                    if (!component.applyScaling) {
+                        GlStateManager.popMatrix();
+                        GlStateManager.pushMatrix();
+                        GlStateManager.scale(defaultGuiScale, defaultGuiScale, defaultGuiScale);
+                    }
+
+                    component.onRender(e.getPartialTicks());
+
+                    if (!component.applyScaling) {
+                        GlStateManager.popMatrix();
+                        GlStateManager.pushMatrix();
+                        GlStateManager.scale(guiScale, guiScale, guiScale);
+                    }
+                }
+            }
+
+            GlStateManager.popMatrix();
         }
     }
 }

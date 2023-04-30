@@ -1,6 +1,7 @@
 package com.thnkscj.toolkit.modules;
 
 import com.thnkscj.toolkit.modules.modules.client.*;
+import com.thnkscj.toolkit.modules.modules.hud.Test;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -26,6 +27,13 @@ public class ModuleManager {
         addModule(new Clans());
         addModule(new ElytraFly());
         addModule(new OldSigns());
+        addModule(new HudEditor());
+
+        /*
+         * HUD MODULES
+         */
+
+        addModule(new Test());
     }
 
     public static Module getModule(String name) {

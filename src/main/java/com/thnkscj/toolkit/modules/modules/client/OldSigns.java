@@ -35,7 +35,7 @@ public class OldSigns extends Module {
         mc.world.loadedTileEntityList.forEach(tileEntity -> {
             if (tileEntity instanceof TileEntitySign && mc.player.getDistance(tileEntity.getPos().x, tileEntity.getPos().y, tileEntity.getPos().z) <= distance.getValue() && RenderUtil.isTileEntityVisible(tileEntity)) {
                 TileEntitySign sign = (TileEntitySign) tileEntity;
-                if (!isOldSignText(sign.getPos())) {
+                if (isOldSignText(sign.getPos())) {
                     RenderUtil.outlineBox(new AxisAlignedBB(sign.getPos()), color.getValue(), color.getColor(), 1, 1, 1, 1);
                 }
             }

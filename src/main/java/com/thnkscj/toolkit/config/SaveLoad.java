@@ -5,6 +5,7 @@ import com.thnkscj.toolkit.Toolkit;
 import com.thnkscj.toolkit.ToolkitPlayer;
 import com.thnkscj.toolkit.command.Command;
 import com.thnkscj.toolkit.manager.FriendManager;
+import com.thnkscj.toolkit.modules.HudModule;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.modules.ModuleManager;
 import com.thnkscj.toolkit.setting.Setting;
@@ -83,6 +84,12 @@ public class SaveLoad {
             moduleObject.add("Name", new JsonPrimitive(module.getName()));
             moduleObject.add("Enabled", new JsonPrimitive(module.isEnabled()));
             moduleObject.add("Keybind", new JsonPrimitive(Keyboard.getKeyName(module.getBind())));
+
+            if (module instanceof HudModule) {
+                HudModule hudModule = (HudModule) module;
+                moduleObject.add("xPos", new JsonPrimitive(hudModule.xAdd));
+                moduleObject.add("zPos", new JsonPrimitive(hudModule.yAdd));
+            }
 
             for (Setting setting : module.getSettings()) {
                 if (setting instanceof BooleanSetting)
@@ -189,8 +196,15 @@ public class SaveLoad {
                     }
                 }
             }
+
             module.setBind(Keyboard.getKeyIndex(moduleObject.get("Keybind").getAsString()));
-            if (moduleObject.get("Enabled").getAsBoolean()) module.enable();
+            module.setEnabled(moduleObject.get("Enabled").getAsBoolean());
+
+            if (module instanceof HudModule) {
+                HudModule hudModule = (HudModule) module;
+                hudModule.xAdd = moduleObject.get("xPos").getAsInt();
+                hudModule.yAdd = moduleObject.get("yPos").getAsInt();
+            }
         }
     }
 

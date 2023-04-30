@@ -22,14 +22,13 @@ public class Frame {
     public int dragY;
     public boolean isDragging;
     public Category category;
-    public ArrayList components = new ArrayList();
+    public ArrayList<Component> components = new ArrayList<>();
     public double cntComp = 0.0;
     private int x;
     private int y;
     private boolean open;
     private int offset;
     private double animFactor = 0;
-
 
     public Frame(Category category) {
         this.category = category;
@@ -41,9 +40,8 @@ public class Frame {
         this.open = false;
         this.isDragging = false;
         int n = this.barHeight - 1;
-        for (Object obj : ModuleManager.getModuleByCategory(category)) {
-            Module module = (Module) obj;
-            Button button = new Button(module, this, n);
+        for (Module obj : ModuleManager.getModuleByCategory(category)) {
+            Button button = new Button(obj, this, n);
             this.components.add(button);
             n += 16;
         }

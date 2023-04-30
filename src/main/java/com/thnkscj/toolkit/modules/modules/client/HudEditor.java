@@ -17,7 +17,6 @@ public class HudEditor extends Module {
         Thread t = new Thread();
         try {
             GUIUtils.updateFont();
-            ClickGui.loadShader();
             mc.displayGuiScreen(Editor.getInstance());
         } catch (Exception ignored) {
         }
