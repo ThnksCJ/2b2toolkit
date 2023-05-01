@@ -33,7 +33,10 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
     @Inject(method = {"move"}, at = {@At(value = "HEAD")}, cancellable = true)
     public void move(MoverType moverType, double x, double y, double z, CallbackInfo cb) {
-        if (ModuleManager.getModule(ElytraFly.class).isEnabled()) {
+        ElytraFly efly = ModuleManager.getModule(ElytraFly.class);
+        if (efly.isEnabled()) {
+            if(ElytraFly.timerTakeoff.isEnabled() && !efly.tookOff)
+                return;
             cb.cancel();
             EntityPlayerSP player = mc.player;
 

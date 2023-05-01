@@ -21,7 +21,7 @@ public class ElytraFly extends Module {
     public ElytraFly() {
         super("ElytraFly", "Fly with elytra", Category.CLIENT);
 
-        addSettings(speed, timerTakeoff, autoJump, timerSpeed);
+        addSettings(speed, step, timerTakeoff, autoJump, timerSpeed);
     }
 
     private static final float MOVE_FRICTION = 4.02f;
@@ -34,6 +34,7 @@ public class ElytraFly extends Module {
 
     public static EnumSetting<Base> base = new EnumSetting<>("Base", "Base speed", Base.Normal);
     public static EnumSetting<Acceleration> acceleration = new EnumSetting<>("Acceleration", "Acceleration mode", Acceleration.Jump);
+    public static DoubleSetting step = new DoubleSetting("Step", "", 0.001, 0.01, 0.05);
 
     public static BooleanSetting timerTakeoff = new BooleanSetting("TimerTakeoff", "Auto takeoff with timer", false);
     public static BooleanSetting autoJump = new BooleanSetting("AutoJump", "Jump automatically when enabling efly", true);
@@ -51,15 +52,29 @@ public class ElytraFly extends Module {
 
     private long ticks = 0;
 
+    private double prevBPS;
+
+    private double fricLiv = LIVING_UPDATE_FRICTION;
+    private double fricMove = MOVE_FRICTION;
+
+    private double max = 0;
+
     @Override
     protected void onEnable() {
         tookOff = false;
         checkTime = false;
         ticks = 0;
-        if (mc.player == null || mc.world == null)
+        prevBPS = 0;
+        max = 0;
+        if(mc.player == null || mc.world == null)
             return;
-        if (timerTakeoff.isEnabled() && mc.player.onGround && !tookOff && autoJump.isEnabled())
+        if(timerTakeoff.isEnabled() && mc.player.onGround && !tookOff && autoJump.isEnabled())
             mc.player.jump();
+    }
+
+    @Override
+    protected void onDisable() {
+        Command.sendMessage("Max Delta: " + max);
     }
 
     @Override
@@ -69,24 +84,32 @@ public class ElytraFly extends Module {
             prevPosZ = mc.player.prevPosZ;
         }
 
-        if (timerTakeoff.isEnabled() && !tookOff && (mc.player.isElytraFlying() || takeOffTimer.passed(3000) || mc.player.onGround) && checkTime) {
+        if(timerTakeoff.isEnabled() && !tookOff && (mc.player.isElytraFlying() || takeOffTimer.passed(3000) || mc.player.onGround) && checkTime){
             mc.timer.tickLength = 50f;
             tookOff = true;
             checkTime = false;
         }
 
-        if (timerTakeoff.isEnabled() && mc.player.motionY < 0 && !tookOff) {
+        if(timerTakeoff.isEnabled() && mc.player.motionY < 0 && !tookOff) {
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
             mc.timer.tickLength = 50f / timerSpeed.getValue().floatValue();
             checkTime = true;
         }
 
-        if (tookOff) {
-            if (mc.player.moveForward > 0.0f) {
+        if(tookOff){
+            if(mc.player.moveForward > 0.0f){
                 ticks++;
             } else {
                 ticks = 0;
             }
+        }
+
+        if(mc.player.moveForward > 0){
+            fricLiv += step.getValue();
+            fricMove += step.getValue();
+        } else {
+            fricLiv = LIVING_UPDATE_FRICTION;
+            fricMove = MOVE_FRICTION;
         }
     }
 
@@ -103,31 +126,35 @@ public class ElytraFly extends Module {
         // these need to be put into a pos where i can be seen
         mc.fontRenderer.drawStringWithShadow("Speed: " + this.formatter.format(BPS) + " BPS", 2, 2, 0xffffff);
         mc.fontRenderer.drawStringWithShadow("Speed " + this.formatter.format(KMH) + "km/h", 2, 12, 0xffffff);
+        mc.fontRenderer.drawStringWithShadow("Delta: " + this.formatter.format(BPS - prevBPS), 2, 22, 0xffffff);
+
+        if(tookOff)
+            max = Math.max(max, BPS - prevBPS);
+
+        prevBPS = BPS;
     }
 
     public void move(EntityPlayerSP player) {
-        if (timerTakeoff.isEnabled() && !tookOff)
+        if(timerTakeoff.isEnabled() && !tookOff)
             return;
         player.motionX = 0.0;
         player.motionY = 0.0;
         player.motionZ = 0.0;
         player.moveForward = player.moveForward > 0.0f ? 1.0f : 0.0f;
-        float friction = MOVE_FRICTION;
+        float friction = (float) fricMove;
         player.moveRelative(0.0f, 0.0f, player.moveForward, friction);
-        Command.sendMessage("Move " + mc.player.moveForward);
     }
 
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
-        if (timerTakeoff.isEnabled() && !tookOff)
+        if(timerTakeoff.isEnabled() && !tookOff)
             return;
         if (mc.player.moveForward > 0.0f) {
             mc.player.motionX = 0.0;
             mc.player.motionY = (-0.03094695885314991);
             mc.player.motionZ = 0.0;
-            float friction = LIVING_UPDATE_FRICTION;
+            float friction = (float) fricLiv;
             mc.player.moveRelative(0.0f, 0.0f, mc.player.moveForward, friction);
-            Command.sendMessage("Living Update " + mc.player.moveForward);
         }
 
         mc.player.prevRotationPitch = -2.0f;
