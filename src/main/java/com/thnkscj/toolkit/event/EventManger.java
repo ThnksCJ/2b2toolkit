@@ -105,24 +105,11 @@ public class EventManger {
         if (e.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
             GlStateManager.pushMatrix();
             double guiScale = mc.gameSettings.guiScale;
-            double defaultGuiScale = 0.5;
             GlStateManager.scale(guiScale, guiScale, guiScale);
 
             for (HudModule component : HudModule.components) {
                 if (component.shouldRender()) {
-                    if (!component.applyScaling) {
-                        GlStateManager.popMatrix();
-                        GlStateManager.pushMatrix();
-                        GlStateManager.scale(defaultGuiScale, defaultGuiScale, defaultGuiScale);
-                    }
-
                     component.onRender(e.getPartialTicks());
-
-                    if (!component.applyScaling) {
-                        GlStateManager.popMatrix();
-                        GlStateManager.pushMatrix();
-                        GlStateManager.scale(guiScale, guiScale, guiScale);
-                    }
                 }
             }
 

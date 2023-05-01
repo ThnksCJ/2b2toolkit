@@ -87,8 +87,8 @@ public class SaveLoad {
 
             if (module instanceof HudModule) {
                 HudModule hudModule = (HudModule) module;
-                moduleObject.add("xPos", new JsonPrimitive(hudModule.xAdd));
-                moduleObject.add("zPos", new JsonPrimitive(hudModule.yAdd));
+                moduleObject.add("xPos", new JsonPrimitive(hudModule.xPos));
+                moduleObject.add("zPos", new JsonPrimitive(hudModule.yPos));
             }
 
             for (Setting setting : module.getSettings()) {
@@ -202,8 +202,8 @@ public class SaveLoad {
 
             if (module instanceof HudModule) {
                 HudModule hudModule = (HudModule) module;
-                hudModule.xAdd = moduleObject.get("xPos").getAsInt();
-                hudModule.yAdd = moduleObject.get("yPos").getAsInt();
+                hudModule.xPos = moduleObject.get("xPos").getAsInt();
+                hudModule.yPos = moduleObject.get("yPos").getAsInt();
             }
         }
     }

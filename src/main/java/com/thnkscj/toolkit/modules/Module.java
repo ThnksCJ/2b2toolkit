@@ -68,7 +68,7 @@ public abstract class Module {
     public void enable() {
         setEnabled(true);
         MinecraftForge.EVENT_BUS.register(this);
-        if (!getName().equalsIgnoreCase("ClickGUI") && !PlayerUtil.nullcheck() && Notifications.chat.getValue()) {
+        if (!getName().equalsIgnoreCase("ClickGUI") && !getName().equalsIgnoreCase("HudEditor") && !PlayerUtil.nullcheck() && Notifications.chat.getValue()) {
             Command.sendMessage(Command.cf_gray + getName() + " toggled" + Command.cf_green + " on." + Command.cfr);
         }
         onEnable();
@@ -77,7 +77,7 @@ public abstract class Module {
     public void disable() {
         setEnabled(false);
         MinecraftForge.EVENT_BUS.unregister(this);
-        if (!getName().equalsIgnoreCase("ClickGUI") && !PlayerUtil.nullcheck() && Notifications.chat.getValue()) {
+        if (!getName().equalsIgnoreCase("ClickGUI") && !getName().equalsIgnoreCase("HudEditor") && !PlayerUtil.nullcheck() && Notifications.chat.getValue()) {
             Command.sendMessage(Command.cf_gray + getName() + " toggled" + Command.cf_red + " off." + Command.cfr);
         }
         onDisable();

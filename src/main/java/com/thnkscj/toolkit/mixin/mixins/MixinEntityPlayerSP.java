@@ -31,7 +31,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         super.move(type, moveEvent.getX(), moveEvent.getY(), moveEvent.getZ());
     }
 
-    @Inject(method={"move"}, at={@At(value="HEAD")}, cancellable=true)
+    @Inject(method = {"move"}, at = {@At(value = "HEAD")}, cancellable = true)
     public void move(MoverType moverType, double x, double y, double z, CallbackInfo cb) {
         if (ModuleManager.getModule(ElytraFly.class).isEnabled()) {
             cb.cancel();
@@ -44,7 +44,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         }
     }
 
-    @Inject(method={"onLivingUpdate"}, at={@At(value="RETURN")})
+    @Inject(method = {"onLivingUpdate"}, at = {@At(value = "RETURN")})
     public void onLivingUpdate(CallbackInfo cb) {
         LivingUpdateEvent livingUpdateEvent = new LivingUpdateEvent();
         MinecraftForge.EVENT_BUS.post(livingUpdateEvent);

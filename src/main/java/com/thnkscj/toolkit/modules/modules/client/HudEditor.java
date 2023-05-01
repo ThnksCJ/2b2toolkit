@@ -4,13 +4,18 @@ import com.thnkscj.toolkit.gui.GUIUtils;
 import com.thnkscj.toolkit.gui.hud.Editor;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
+import com.thnkscj.toolkit.setting.settings.BooleanSetting;
 import org.lwjgl.input.Keyboard;
 
 public class HudEditor extends Module {
     public HudEditor() {
         super("HudEditor", "", Category.CLIENT);
         setBind(Keyboard.KEY_RSHIFT);
+
+        addSettings(debug);
     }
+
+    public static BooleanSetting debug = new BooleanSetting("Debug", "debug", false);
 
     @Override
     public void onEnable() {

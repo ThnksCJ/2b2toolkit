@@ -13,8 +13,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -25,10 +23,8 @@ public class Editor extends GuiScreen {
     public static ArrayList<Frame> frames;
     public static int lastMouseX, lastMouseY;
     public static HudModule dragging;
-    public static int EXTEND = 3;
     public static int color = ClickGui.color.getColor().getRGB();
     public static int color2 = ClickGui.color2.getColor().getRGB();
-    private float scale = 0;
 
     public Editor() {
         setInstance();
@@ -36,7 +32,7 @@ public class Editor extends GuiScreen {
         frames = new ArrayList<>();
 
         Frame frame = new Frame(Category.HUD);
-        frame.setX(30);
+        frame.setX(60);
         frame.setY(10);
         frames.add(frame);
     }
@@ -56,10 +52,6 @@ public class Editor extends GuiScreen {
     @Override
     public boolean doesGuiPauseGame() {
         return false;
-    }
-
-    public void initGui() {
-        scale = 1;
     }
 
     @Override
@@ -89,12 +81,11 @@ public class Editor extends GuiScreen {
         }
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 1);
+        GlStateManager.scale(1, 1, 1);
         for (Frame frame : frames) {
             frame.renderFrame(mouseX, mouseY);
             frame.updatePosition(mouseX, mouseY);
-            for (Object componentw : frame.getComponents()) {
-                Component component = (Component) componentw;
+            for (Component component : frame.getComponents()) {
                 component.updateComponent(mouseX, mouseY);
             }
         }
@@ -109,31 +100,48 @@ public class Editor extends GuiScreen {
         for (HudModule component : HudModule.components) {
             if (component.shouldRender()) {
                 for (HudModule.HudPoint point : component.renderedPoints) {
-                    drawRect((int) point.x - EXTEND, (int) point.y - EXTEND, (int) point.x2 + EXTEND, (int) point.y2 + EXTEND, 0x80000000);
-                }
-            }
-        }
+                    if (HudEditor.debug.isEnabled()) {
+                        GUIUtils.drawCircle((int) point.x - 1, (int) point.y - 1, 1, 0xffff0000);
+                        GUIUtils.drawCircle((int) point.x2 - 3, (int) point.y - 1, 1, 0xffff0000);
+                        GUIUtils.drawCircle((int) point.x - 1, (int) point.y2, 1, 0xffff0000);
+                        GUIUtils.drawCircle((int) point.x2 - 3, (int) point.y2, 1, 0xffff0000);
 
-        for (HudModule component : HudModule.components) {
-            if (component.shouldRender()) {
-                if (!component.applyScaling) {
-                    GlStateManager.popMatrix();
-                    GlStateManager.pushMatrix();
+                        GUIUtils.drawLine((int) point.x - 1, (int) point.y - 1, (int) point.x2 - 3, (int) point.y - 1, 0xff00ff00);
+                        GUIUtils.drawLine((int) point.x - 1, (int) point.y - 1, (int) point.x - 1, (int) point.y2, 0xff00ff00);
+                        GUIUtils.drawLine((int) point.x2 - 3, (int) point.y - 1, (int) point.x2 - 3, (int) point.y2, 0xff00ff00);
+                        GUIUtils.drawLine((int) point.x - 1, (int) point.y2, (int) point.x2 - 3, (int) point.y2, 0xff00ff00);
+
+                        GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y - 2, 0xff0000ff);
+                        GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x - 2, (int) point.y2 + 1, 0xff0000ff);
+                        GUIUtils.drawLine((int) point.x2 - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y2 + 1, 0xff0000ff);
+                        GUIUtils.drawLine((int) point.x - 2, (int) point.y2 + 1, (int) point.x2 - 2, (int) point.y2 + 1, 0xff0000ff);
+                    }
+
+                    drawRect((int) point.x - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y2 + 1, 0x80000000);
+
+                    if (component.isSelected || mouseX >= point.x - 3 && mouseX <= point.x2 - 1 && mouseY >= point.y - 3 && mouseY <= point.y2 + 2) {
+                        int color = new Color(45, 207, 255, 255).getRGB();
+
+                        GUIUtils.drawCircle((int) point.x - 2, (int) point.y - 2, 1, color);
+                        GUIUtils.drawCircle((int) point.x2 - 2, (int) point.y - 2, 1, color);
+                        GUIUtils.drawCircle((int) point.x - 2, (int) point.y2 + 1, 1, color);
+                        GUIUtils.drawCircle((int) point.x2 - 2, (int) point.y2 + 1, 1, color);
+
+                        GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y - 2, color);
+                        GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x - 2, (int) point.y2 + 1, color);
+                        GUIUtils.drawLine((int) point.x2 - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y2 + 1, color);
+                        GUIUtils.drawLine((int) point.x - 2, (int) point.y2 + 1, (int) point.x2 - 2, (int) point.y2 + 1, color);
+                    }
                 }
 
                 component.onRender(partialTicks);
-
-                if (!component.applyScaling) {
-                    GlStateManager.popMatrix();
-                    GlStateManager.pushMatrix();
-                }
             }
         }
 
         if (dragging != null) {
             if (Mouse.isButtonDown(0)) {
-                dragging.xAdd += mouseX - lastMouseX;
-                dragging.yAdd += mouseY - lastMouseY;
+                dragging.xPos += mouseX - lastMouseX;
+                dragging.yPos += mouseY - lastMouseY;
             } else {
                 dragging = null;
             }
@@ -156,8 +164,7 @@ public class Editor extends GuiScreen {
                 frame.setOpen(!frame.isOpen());
             }
             if (!frame.isOpen() || frame.getComponents().isEmpty()) continue;
-            for (Object componentw : frame.getComponents()) {
-                Component component = (Component) componentw;
+            for (Component component : frame.getComponents()) {
                 component.mouseClicked(x, y, button);
             }
         }
@@ -166,8 +173,9 @@ public class Editor extends GuiScreen {
         for (HudModule component2 : HudModule.components) {
             if (component2.shouldRender()) {
                 for (HudModule.HudPoint point : component2.renderedPoints) {
-                    if (point.x2 + EXTEND > lastMouseX && point.x - EXTEND < lastMouseX && point.y2 + EXTEND > lastMouseY && point.y - EXTEND < lastMouseY) {
+                    if (point.x2 + 1 > lastMouseX && point.x - 1 < lastMouseX && point.y2 + 1 > lastMouseY && point.y - 1 < lastMouseY) {
                         component = component2;
+                        component.isSelected = true;
                         break;
                     }
                 }
@@ -175,14 +183,16 @@ public class Editor extends GuiScreen {
         }
 
         if (component == null) {
+            for (HudModule component2 : HudModule.components) {
+                if (component2 != component) {
+                    component2.isSelected = false;
+                }
+            }
             return;
         }
 
         if (button == 0) {
             dragging = component;
-        } else if (button == 2) {
-            component.xAdd = 0;
-            component.yAdd = 0;
         }
     }
 
@@ -192,8 +202,7 @@ public class Editor extends GuiScreen {
         }
         for (Frame frame : frames) {
             if (!frame.isOpen() || frame.getComponents().isEmpty()) continue;
-            for (Object componentw : frame.getComponents()) {
-                Component component = (Component) componentw;
+            for (Component component : frame.getComponents()) {
                 component.mouseReleased(x, y, button);
             }
         }
@@ -202,8 +211,7 @@ public class Editor extends GuiScreen {
     protected void keyTyped(char c, int n) {
         for (Frame frame : frames) {
             if (!frame.isOpen() || n == 1 || frame.getComponents().isEmpty()) continue;
-            for (Object componentw : frame.getComponents()) {
-                Component component = (Component) componentw;
+            for (Component component : frame.getComponents()) {
                 component.keyTyped(c, n);
             }
         }
@@ -226,12 +234,5 @@ public class Editor extends GuiScreen {
 
     public void onGuiClosed() {
         ModuleManager.getModule(HudEditor.class).disable();
-    }
-
-    @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
-        if (!(mc.currentScreen instanceof Editor)) {
-            ModuleManager.getModule(HudEditor.class).disable();
-        }
     }
 }

@@ -29,6 +29,15 @@ public class ModuleManager {
         addModule(new OldSigns());
         addModule(new HudEditor());
 
+        mods.sort((o1, o2) -> {
+            if (o1.getName().charAt(0) > o2.getName().charAt(0)) {
+                return 1;
+            } else if (o1.getName().charAt(0) < o2.getName().charAt(0)) {
+                return -1;
+            }
+            return 0;
+        });
+
         /*
          * HUD MODULES
          */

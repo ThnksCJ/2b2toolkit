@@ -19,13 +19,25 @@ import static net.minecraft.client.gui.Gui.drawRect;
 @Mixin(GuiNewChat.class)
 public abstract class MixinGuiNewChat {
 
-    @Shadow public int scrollPos;
-    @Final @Shadow public java.util.List<ChatLine> drawnChatLines;
-    @Shadow public boolean isScrolled;
-    @Shadow public abstract int getLineCount();
-    @Shadow public abstract boolean getChatOpen();
-    @Shadow public abstract float getChatScale();
-    @Shadow public abstract int getChatWidth();
+    @Shadow
+    public int scrollPos;
+    @Final
+    @Shadow
+    public java.util.List<ChatLine> drawnChatLines;
+    @Shadow
+    public boolean isScrolled;
+
+    @Shadow
+    public abstract int getLineCount();
+
+    @Shadow
+    public abstract boolean getChatOpen();
+
+    @Shadow
+    public abstract float getChatScale();
+
+    @Shadow
+    public abstract int getChatWidth();
 
     @Inject(method = "drawChat", at = @At(value = "HEAD"), cancellable = true)
     private void drawChat(int updateCounter, CallbackInfo ci) {

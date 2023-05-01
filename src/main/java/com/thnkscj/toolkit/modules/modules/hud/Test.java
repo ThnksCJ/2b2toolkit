@@ -5,7 +5,7 @@ import com.thnkscj.toolkit.modules.HudModule;
 
 public class Test extends HudModule {
     public Test() {
-        super(HudCorner.TOP_LEFT, "Watermark");
+        super("Watermark", "", HudCorner.TOP_LEFT);
     }
 
     @Override

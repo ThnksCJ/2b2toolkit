@@ -48,18 +48,6 @@ public class Frame {
         offset = n - 17;
     }
 
-    public static void getModCount() {
-        int size = ModuleManager.getModules().size();
-
-        for (int i = 0; i < size; ++i) {
-            final Module m = ModuleManager.getModules().get(i);
-
-            if (m != null) {
-
-            }
-        }
-    }
-
     public int getWidth() {
         return this.width;
     }
@@ -81,10 +69,9 @@ public class Frame {
 
     public void refresh() {
         int n = this.barHeight;
-        for (Object components : this.components) {
-            Component component = (Component) components;
-            component.setOff(n);
-            n += component.getHeight();
+        for (Component components : this.components) {
+            components.setOff(n);
+            n += components.getHeight();
         }
         int n2 = this.barHeight - 1;
         for (Object obj : this.components) {
@@ -119,13 +106,13 @@ public class Frame {
             if (this.components.size() > (int) this.cntComp) {
                 int n = 0;
                 while ((double) n < this.cntComp) {
-                    ((Component) this.components.get(n)).renderComponent();
+                    this.components.get(n).renderComponent();
                     ++n;
                 }
                 this.cntComp += 0.14;
             } else {
-                for (Object component : this.components) {
-                    ((Component) component).renderComponent();
+                for (Component component : this.components) {
+                    component.renderComponent();
                 }
             }
         }
@@ -170,7 +157,7 @@ public class Frame {
         this.y = n;
     }
 
-    public ArrayList getComponents() {
+    public ArrayList<Component> getComponents() {
         return this.components;
     }
 }

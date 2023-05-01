@@ -56,9 +56,9 @@ public class ElytraFly extends Module {
         tookOff = false;
         checkTime = false;
         ticks = 0;
-        if(mc.player == null || mc.world == null)
+        if (mc.player == null || mc.world == null)
             return;
-        if(timerTakeoff.isEnabled() && mc.player.onGround && !tookOff && autoJump.isEnabled())
+        if (timerTakeoff.isEnabled() && mc.player.onGround && !tookOff && autoJump.isEnabled())
             mc.player.jump();
     }
 
@@ -69,20 +69,20 @@ public class ElytraFly extends Module {
             prevPosZ = mc.player.prevPosZ;
         }
 
-        if(timerTakeoff.isEnabled() && !tookOff && (mc.player.isElytraFlying() || takeOffTimer.passed(3000) || mc.player.onGround) && checkTime){
+        if (timerTakeoff.isEnabled() && !tookOff && (mc.player.isElytraFlying() || takeOffTimer.passed(3000) || mc.player.onGround) && checkTime) {
             mc.timer.tickLength = 50f;
             tookOff = true;
             checkTime = false;
         }
 
-        if(timerTakeoff.isEnabled() && mc.player.motionY < 0 && !tookOff) {
+        if (timerTakeoff.isEnabled() && mc.player.motionY < 0 && !tookOff) {
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
             mc.timer.tickLength = 50f / timerSpeed.getValue().floatValue();
             checkTime = true;
         }
 
-        if(tookOff){
-            if(mc.player.moveForward > 0.0f){
+        if (tookOff) {
+            if (mc.player.moveForward > 0.0f) {
                 ticks++;
             } else {
                 ticks = 0;
@@ -106,7 +106,7 @@ public class ElytraFly extends Module {
     }
 
     public void move(EntityPlayerSP player) {
-        if(timerTakeoff.isEnabled() && !tookOff)
+        if (timerTakeoff.isEnabled() && !tookOff)
             return;
         player.motionX = 0.0;
         player.motionY = 0.0;
@@ -119,7 +119,7 @@ public class ElytraFly extends Module {
 
     @SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
-        if(timerTakeoff.isEnabled() && !tookOff)
+        if (timerTakeoff.isEnabled() && !tookOff)
             return;
         if (mc.player.moveForward > 0.0f) {
             mc.player.motionX = 0.0;
