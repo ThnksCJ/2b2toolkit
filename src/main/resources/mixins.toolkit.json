@@ -8,11 +8,14 @@
     "MixinBlockRendererDispatcher",
     "MixinEntityPlayerSP",
     "MixinEntityRenderer",
+    "MixinGuiMainMenu",
+    "MixinGuiNewChat",
     "MixinMathHelper",
     "MixinNetworkManager",
     "MixinPlayerControllerMP",
-    "MixinRenderTNTPrimed",
-    "MixinGuiNewChat",
-    "MixinGuiMainMenu"
+    "MixinRenderTNTPrimed"
+  ],
+  "client": [
+    "MixinGuiOverlayDebug"
   ]
 }
