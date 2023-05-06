@@ -46,9 +46,7 @@ public class ModeMenu extends com.thnkscj.toolkit.gui.click.components.Component
         this.subcomponents = new ArrayList();
         Collections.addAll(subcomponents, enumSetting.getValues());
         rotation = 0;
-
     }
-
 
     public Enum getSelected() {
         for (Enum enums : op.getValues()) {

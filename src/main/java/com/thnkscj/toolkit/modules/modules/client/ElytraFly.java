@@ -38,7 +38,7 @@ public class ElytraFly extends Module {
 
     public static BooleanSetting timerTakeoff = new BooleanSetting("TimerTakeoff", "Auto takeoff with timer", false);
     public static BooleanSetting autoJump = new BooleanSetting("AutoJump", "Jump automatically when enabling efly", true);
-    public static DoubleSetting timerSpeed = new DoubleSetting("TimerSpeed", "The timer speed for takeoff", 0.05, 0.25, 1.0);
+    public static DoubleSetting timerSpeed = new DoubleSetting("TimerSpeed", "The timer speed for takeoff", 0.05, 0.05, 1.0);
 
     private static long lastOpenElytra = 0L;
     final DecimalFormat formatter = new DecimalFormat("#.#");

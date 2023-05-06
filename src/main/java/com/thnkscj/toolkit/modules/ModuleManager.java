@@ -28,7 +28,6 @@ public class ModuleManager {
         addModule(new ElytraFly());
         addModule(new OldSigns());
         addModule(new HudEditor());
-        addModule(new ShaderTest());
 
         mods.sort((o1, o2) -> {
             if (o1.getName().charAt(0) > o2.getName().charAt(0)) {

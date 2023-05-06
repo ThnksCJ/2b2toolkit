@@ -1,5 +1,7 @@
 package com.thnkscj.toolkit.gui.hud;
 
+import com.thnkscj.toolkit.command.Command;
+import com.thnkscj.toolkit.config.SaveLoad;
 import com.thnkscj.toolkit.gui.GUIUtils;
 import com.thnkscj.toolkit.gui.click.components.Component;
 import com.thnkscj.toolkit.gui.click.components.Frame;
@@ -9,6 +11,7 @@ import com.thnkscj.toolkit.modules.ModuleManager;
 import com.thnkscj.toolkit.modules.modules.client.ClickGui;
 import com.thnkscj.toolkit.modules.modules.client.HudEditor;
 import com.thnkscj.toolkit.util.misc.ColorUtil;
+import com.thnkscj.toolkit.util.shader.RoundedUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,6 +19,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Editor extends GuiScreen {
@@ -91,46 +95,30 @@ public class Editor extends GuiScreen {
         }
         this.updateMouseWheel();
 
-        double guiScale = mc.gameSettings.guiScale;
-        GlStateManager.scale(guiScale, guiScale, guiScale);
-
-        mouseX = (int) (mouseX / guiScale);
-        mouseY = (int) (mouseY / guiScale);
-
         for (HudModule component : HudModule.components) {
             if (component.shouldRender()) {
                 for (HudModule.HudPoint point : component.renderedPoints) {
+                    RoundedUtil.drawRound(point.x - 1, point.y - 1, point.x2 - component.xPos + 2, point.y2 - component.yPos + 2, 1, true, new Color(0x80000000, true));
+
                     if (HudEditor.debug.isEnabled()) {
-                        GUIUtils.drawCircle((int) point.x - 1, (int) point.y - 1, 1, 0xffff0000);
-                        GUIUtils.drawCircle((int) point.x2 - 3, (int) point.y - 1, 1, 0xffff0000);
-                        GUIUtils.drawCircle((int) point.x - 1, (int) point.y2, 1, 0xffff0000);
-                        GUIUtils.drawCircle((int) point.x2 - 3, (int) point.y2, 1, 0xffff0000);
-
-                        GUIUtils.drawLine((int) point.x - 1, (int) point.y - 1, (int) point.x2 - 3, (int) point.y - 1, 0xff00ff00);
-                        GUIUtils.drawLine((int) point.x - 1, (int) point.y - 1, (int) point.x - 1, (int) point.y2, 0xff00ff00);
-                        GUIUtils.drawLine((int) point.x2 - 3, (int) point.y - 1, (int) point.x2 - 3, (int) point.y2, 0xff00ff00);
-                        GUIUtils.drawLine((int) point.x - 1, (int) point.y2, (int) point.x2 - 3, (int) point.y2, 0xff00ff00);
-
-                        GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y - 2, 0xff0000ff);
-                        GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x - 2, (int) point.y2 + 1, 0xff0000ff);
-                        GUIUtils.drawLine((int) point.x2 - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y2 + 1, 0xff0000ff);
-                        GUIUtils.drawLine((int) point.x - 2, (int) point.y2 + 1, (int) point.x2 - 2, (int) point.y2 + 1, 0xff0000ff);
+                        GUIUtils.drawCircle((int) point.x, (int) point.y, 1, 0xffff0000);
+                        GUIUtils.drawCircle((int) point.x2, (int) point.y - 1, 1, 0xffff0000);
+                        GUIUtils.drawCircle((int) point.x, (int) point.y2, 1, 0xffff0000);
+                        GUIUtils.drawCircle((int) point.x2, (int) point.y2, 1, 0xffff0000);
                     }
-
-                    drawRect((int) point.x - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y2 + 1, 0x80000000);
 
                     if (component.isSelected || mouseX >= point.x - 3 && mouseX <= point.x2 - 1 && mouseY >= point.y - 3 && mouseY <= point.y2 + 2) {
                         int color = new Color(45, 207, 255, 255).getRGB();
 
                         GUIUtils.drawCircle((int) point.x - 2, (int) point.y - 2, 1, color);
-                        GUIUtils.drawCircle((int) point.x2 - 2, (int) point.y - 2, 1, color);
+                        GUIUtils.drawCircle((int) point.x2 + 2, (int) point.y - 2, 1, color);
                         GUIUtils.drawCircle((int) point.x - 2, (int) point.y2 + 1, 1, color);
-                        GUIUtils.drawCircle((int) point.x2 - 2, (int) point.y2 + 1, 1, color);
+                        GUIUtils.drawCircle((int) point.x2 + 2, (int) point.y2 + 1, 1, color);
 
-                        GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y - 2, color);
+                        GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x2 + 2, (int) point.y - 2, color);
                         GUIUtils.drawLine((int) point.x - 2, (int) point.y - 2, (int) point.x - 2, (int) point.y2 + 1, color);
-                        GUIUtils.drawLine((int) point.x2 - 2, (int) point.y - 2, (int) point.x2 - 2, (int) point.y2 + 1, color);
-                        GUIUtils.drawLine((int) point.x - 2, (int) point.y2 + 1, (int) point.x2 - 2, (int) point.y2 + 1, color);
+                        GUIUtils.drawLine((int) point.x2 + 2, (int) point.y - 2, (int) point.x2 + 2, (int) point.y2 + 1, color);
+                        GUIUtils.drawLine((int) point.x - 2, (int) point.y2 + 1, (int) point.x2 + 2, (int) point.y2 + 1, color);
                     }
                 }
 
@@ -234,5 +222,11 @@ public class Editor extends GuiScreen {
 
     public void onGuiClosed() {
         ModuleManager.getModule(HudEditor.class).disable();
+
+        try {
+            SaveLoad.saveModules();
+        } catch (IOException ignored) {
+            Command.sendErrMessage("Failed to save modules");
+        }
     }
 }

@@ -22,15 +22,13 @@ import java.util.ArrayList;
 import static com.thnkscj.toolkit.util.Wrapper.mc;
 
 public class Button extends Component {
-    private final int height;
-    private final int alpha = 0;
     public int inUp = 0;
     public boolean open;
     public int offset;
     public Module mod;
     public Frame parent;
     public boolean isHovered;
-    public ArrayList subcomponents;
+    public ArrayList<Component> subcomponents;
     int mouseX;
     int mouseY;
     Timer timer = new Timer();
@@ -46,17 +44,14 @@ public class Button extends Component {
         this.mod = module;
         this.parent = frame;
         this.offset = n + 1;
-        this.subcomponents = new ArrayList();
+        this.subcomponents = new ArrayList<>();
         this.open = false;
         this.pickingKey = false;
-        this.height = 15;
         int n2 = n + 15;
-        for (Object obj : module.getSettings()) {
-            Setting setting = (Setting) obj;
+        for (Setting<?> setting : module.getSettings()) {
             if (setting instanceof BooleanSetting) {
-                BooleanSetting set = (BooleanSetting) setting;
-                CheckBox checkbox = new CheckBox(set, this, n2);
-                subcomponents.add(checkbox);
+                component = new CheckBox((BooleanSetting) setting, this, n2);
+                this.subcomponents.add(component);
                 n2 += 15;
             } else if (setting instanceof IntegerSetting) {
                 IntegerSetting set = (IntegerSetting) setting;
@@ -69,7 +64,7 @@ public class Button extends Component {
                 subcomponents.add(slider);
                 n2 += 15;
             } else if (setting instanceof EnumSetting) {
-                EnumSetting set = (EnumSetting) setting;
+                EnumSetting<?> set = (EnumSetting<?>) setting;
                 ModeMenu menu = new ModeMenu(set, this, n2);
                 subcomponents.add(menu);
                 n2 += 15;
@@ -86,8 +81,7 @@ public class Button extends Component {
     public void setOff(int n) {
         this.offset = n;
         int n2 = this.offset + 30;
-        for (Object componentw : this.subcomponents) {
-            Component component = (Component) componentw;
+        for (Component component : this.subcomponents) {
             component.setOff(n2);
             n2 += component.getHeight();
 
@@ -131,8 +125,7 @@ public class Button extends Component {
         GL11.glPopMatrix();
         if (this.open && !this.subcomponents.isEmpty()) {
             int n = 0;
-            for (Object componentw : this.subcomponents) {
-                Component component = (Component) componentw;
+            for (Component component : this.subcomponents) {
                 component.renderComponent();
 
                 n += component.getHeight();
@@ -188,8 +181,7 @@ public class Button extends Component {
 
     @Override
     public void keyTyped(char c, int n) {
-        for (Object componentw : this.subcomponents) {
-            Component component = (Component) componentw;
+        for (Component component : this.subcomponents) {
             component.keyTyped(c, n);
         }
         if (open) {
@@ -211,8 +203,7 @@ public class Button extends Component {
         this.isHovered = this.isMouseOnButton(n, n2);
         this.hovered2 = this.isMouseOnKeybind(n, n2);
         if (!this.subcomponents.isEmpty()) {
-            for (Object componentw : this.subcomponents) {
-                Component component = (Component) componentw;
+            for (Component component : this.subcomponents) {
                 component.updateComponent(n, n2);
             }
         }
@@ -221,8 +212,7 @@ public class Button extends Component {
 
     @Override
     public void mouseReleased(int n, int n2, int n3) {
-        for (Object componentw : this.subcomponents) {
-            Component component = (Component) componentw;
+        for (Component component : this.subcomponents) {
             component.mouseReleased(n, n2, n3);
         }
     }
@@ -247,8 +237,7 @@ public class Button extends Component {
             this.open = !this.open;
             this.parent.refresh();
         }
-        for (Object componentw : this.subcomponents) {
-            Component component = (Component) componentw;
+        for (Component component : this.subcomponents) {
             component.mouseClicked(n, n2, n3);
         }
     }

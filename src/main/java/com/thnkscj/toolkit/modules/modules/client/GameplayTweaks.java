@@ -5,7 +5,6 @@ import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.modules.ModuleManager;
 import com.thnkscj.toolkit.setting.settings.BooleanSetting;
-import com.thnkscj.toolkit.util.render.RenderUtil;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -16,7 +15,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +95,7 @@ public class GameplayTweaks extends Module {
                 for (int z = (int) mc.player.posZ - 10; z < (int) mc.player.posZ + 10; z++)
                     blocks.add(new BlockPos(x, y, z));
 
+        /*
         if (showRedstonePowered.getValue()) {
             for (BlockPos block : blocks) {
                 if (
@@ -106,9 +105,11 @@ public class GameplayTweaks extends Module {
                                 !mc.world.getBlockState(block).getBlock().getRegistryName().toString().contains("lava") &&
                                 !mc.world.getBlockState(block).getBlock().getRegistryName().toString().contains("repeater")
                 ) {
-                    RenderUtil.drawBox2(block, new Color(255, 0, 0, 40));
+                    RenderUtil.drawBox(block, new Color(255, 0, 0, 40));
                 }
             }
         }
+
+         */
     }
 }

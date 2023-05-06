@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.awt.*;
 import java.text.DecimalFormat;
 
-import static com.thnkscj.toolkit.util.render.RenderUtil.mc;
+import static com.thnkscj.toolkit.util.Wrapper.mc;
 
 @Mixin(value = RenderTNTPrimed.class, priority = Precedence.NORMAL)
 public class MixinRenderTNTPrimed {

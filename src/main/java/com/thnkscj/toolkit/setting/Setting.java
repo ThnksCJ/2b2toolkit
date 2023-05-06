@@ -26,5 +26,4 @@ public class Setting<T> {
     public void setValue(final T value) {
         this.value = value;
     }
-
 }

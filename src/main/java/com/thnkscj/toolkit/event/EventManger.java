@@ -8,7 +8,6 @@ import com.thnkscj.toolkit.modules.HudModule;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.modules.ModuleManager;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -101,19 +100,13 @@ public class EventManger {
     }
 
     @SubscribeEvent
-    public void renderText(RenderGameOverlayEvent.Text e) {
+    public void renderText(RenderGameOverlayEvent.Pre e) {
         if (e.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
-            GlStateManager.pushMatrix();
-            double guiScale = mc.gameSettings.guiScale;
-            GlStateManager.scale(guiScale, guiScale, guiScale);
-
             for (HudModule component : HudModule.components) {
                 if (component.shouldRender()) {
                     component.onRender(e.getPartialTicks());
                 }
             }
-
-            GlStateManager.popMatrix();
         }
     }
 }

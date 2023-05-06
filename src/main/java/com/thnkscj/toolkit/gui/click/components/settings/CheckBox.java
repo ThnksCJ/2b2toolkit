@@ -92,8 +92,6 @@ public class CheckBox extends com.thnkscj.toolkit.gui.click.components.Component
         GUIUtils.drawRectangle(parent.parent.getX() + 86.5f, parent.parent.getY() + offset + 4.5f, 6, 6, new Color(176, 176, 176).getRGB());
 
         GUIUtils.drawRectangle(parent.parent.getX() + 86.5f, parent.parent.getY() + offset + 4.5f, 6, 6, ColorUtil.changeAlpha(Gui.color, alpha));
-
-
     }
 
     @Override
