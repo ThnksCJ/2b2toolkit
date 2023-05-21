@@ -28,7 +28,6 @@ public class ElytraFly extends Module {
     private static final float MOVE_FAST = 4.31f;
     private static final float LIVING_UPDATE_FRICTION = 3.170326f;
 
-
     // for testing speed won't do anything for now
     public static IntegerSetting speed = new IntegerSetting("Speed", "How fast u wanna go", 1, 10, 20);
 
@@ -84,27 +83,31 @@ public class ElytraFly extends Module {
             prevPosZ = mc.player.prevPosZ;
         }
 
-        if(timerTakeoff.isEnabled() && !tookOff && (mc.player.isElytraFlying() || takeOffTimer.passed(3000) || mc.player.onGround) && checkTime){
+        if (timerTakeoff.isEnabled() && !tookOff && (mc.player.isElytraFlying() || takeOffTimer.passed(3000) || mc.player.onGround) && checkTime) {
             mc.timer.tickLength = 50f;
             tookOff = true;
             checkTime = false;
         }
 
-        if(timerTakeoff.isEnabled() && mc.player.motionY < 0 && !tookOff) {
+        if (timerTakeoff.isEnabled() && mc.player.motionY < 0 && !tookOff) {
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
             mc.timer.tickLength = 50f / timerSpeed.getValue().floatValue();
             checkTime = true;
         }
 
-        if(tookOff){
-            if(mc.player.moveForward > 0.0f){
+        if (tookOff) {
+            if (mc.player.moveForward > 0.0f) {
                 ticks++;
+                if (ticks % 4 == 0) {
+                    fricLiv += step.getValue();
+                    fricMove += step.getValue();
+                }
             } else {
                 ticks = 0;
             }
         }
 
-        if(mc.player.moveForward > 0){
+        if (mc.player.moveForward > 0) {
             fricLiv += step.getValue();
             fricMove += step.getValue();
         } else {
@@ -112,6 +115,7 @@ public class ElytraFly extends Module {
             fricMove = MOVE_FRICTION;
         }
     }
+
 
     @Override
     public void onRender2D(Render2DEvent event) {
@@ -137,6 +141,7 @@ public class ElytraFly extends Module {
     public void move(EntityPlayerSP player) {
         if(timerTakeoff.isEnabled() && !tookOff)
             return;
+
         player.motionX = 0.0;
         player.motionY = 0.0;
         player.motionZ = 0.0;
@@ -149,6 +154,7 @@ public class ElytraFly extends Module {
     public void onLivingUpdate(LivingUpdateEvent event) {
         if(timerTakeoff.isEnabled() && !tookOff)
             return;
+
         if (mc.player.moveForward > 0.0f) {
             mc.player.motionX = 0.0;
             mc.player.motionY = (-0.03094695885314991);
