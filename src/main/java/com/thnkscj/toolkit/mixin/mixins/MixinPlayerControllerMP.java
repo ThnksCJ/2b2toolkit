@@ -1,12 +1,14 @@
 package com.thnkscj.toolkit.mixin.mixins;
 
 import com.thnkscj.toolkit.event.events.block.DamageBlockEvent;
+import com.thnkscj.toolkit.event.events.block.PlaceBlockEvent;
 import com.thnkscj.toolkit.event.events.block.PlayerDestroyBlockEvent;
 import com.thnkscj.toolkit.event.events.block.ProcessRightClickBlockEvent;
 import com.thnkscj.toolkit.mixin.Precedence;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -47,5 +49,11 @@ public class MixinPlayerControllerMP {
             info.setReturnValue(EnumActionResult.SUCCESS);
             info.cancel();
         }
+    }
+
+    @Inject(method = "processRightClickBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/NetHandlerPlayClient;sendPacket(Lnet/minecraft/network/Packet;)V", ordinal = 2, shift = At.Shift.AFTER), cancellable = true)
+    public void onPlaceBlock(EntityPlayerSP player, WorldClient world, BlockPos pos, EnumFacing facing, Vec3d vec, EnumHand hand, CallbackInfoReturnable<EnumActionResult> info) {
+        PlaceBlockEvent event = new PlaceBlockEvent(pos);
+        MinecraftForge.EVENT_BUS.post(event);
     }
 }
