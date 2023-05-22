@@ -23,7 +23,7 @@ public class FakePlayer extends Module {
         }
 
         new Thread(() -> {
-            fakePlayer = new EntityOtherPlayerMP(mc.world, new GameProfile(UUID.fromString("9d942108-9c0d-41ed-ac5c-c3ef7353e7c5"), "Thnks_CJ#5607"));
+            fakePlayer = new EntityOtherPlayerMP(mc.world, new GameProfile(UUID.fromString("9d942108-9c0d-41ed-ac5c-c3ef7353e7c5"), "Thnks_CJ"));
 
             fakePlayer.copyLocationAndAnglesFrom(mc.player);
             fakePlayer.rotationYawHead = mc.player.rotationYaw;

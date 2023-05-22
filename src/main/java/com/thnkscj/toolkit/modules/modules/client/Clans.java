@@ -1,24 +1,40 @@
 package com.thnkscj.toolkit.modules.modules.client;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.setting.settings.EnumSetting;
+import com.thnkscj.toolkit.util.misc.HttpUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Clans extends Module {
-    public static EnumSetting<Color> typeOfBadge = new EnumSetting<>("Type of badge", "", Color.Normal);
+    public static EnumSetting<ClanType> typeOfBadge = new EnumSetting<>("Type of badge", "", ClanType.Normal);
 
     public Clans() {
         super("Clans", "Clans", Category.CLIENT);
 
         addSettings(typeOfBadge);
+    }
+
+    public static Map<String, String> clanCache = new HashMap<>();
+    public static Gson gson = new GsonBuilder().setLenient().setPrettyPrinting().create();
+
+    @Override
+    public void onEnable() {
+        clanCache.clear();
+        clanCache.putAll(gson.fromJson(HttpUtil.getResponse("https://pastebin.com/raw/0vf4fHNc"), Map.class));
     }
 
     public static void drawNameplate(FontRenderer fontRendererIn, String str, float x, float y, float z, int verticalShift, float viewerYaw, float viewerPitch, boolean isThirdPersonFrontal, boolean isSneaking) {
@@ -60,8 +76,13 @@ public class Clans extends Module {
         }
 
         Minecraft mc = Minecraft.getMinecraft();
-        mc.getTextureManager().bindTexture(new ResourceLocation("icons/badge-" + getBadgeColor(str) + ".png"));
-        Gui.drawModalRectWithCustomSizedTexture(-fontRendererIn.getStringWidth(str) / 2 - 12 + 7, -1, 9, 9, 9, 9, 9, 9);
+
+        String badge = getBadgeColor(str);
+
+        if (!badge.equals("blank")) {
+            mc.getTextureManager().bindTexture(new ResourceLocation("icons/badge-" + badge + ".png"));
+            Gui.drawModalRectWithCustomSizedTexture(-fontRendererIn.getStringWidth(str) / 2 - 12 + 7, -1, 9, 9, 9, 9, 9, 9);
+        }
 
         GlStateManager.enableLighting();
         GlStateManager.disableBlend();
@@ -70,10 +91,22 @@ public class Clans extends Module {
     }
 
     public static String getBadgeColor(String username) {
-        return "normal";
+        if (clanCache.containsKey(username))
+            return clanCache.getOrDefault(username, "blank");
+
+        NetworkPlayerInfo profile = Minecraft.getMinecraft().getConnection().getPlayerInfo(username);
+
+        if (profile == null)
+            return "blank";
+
+        String uuid = profile.getGameProfile().getId().toString();
+        clanCache.put(username, clanCache.get(uuid));
+        clanCache.remove(uuid);
+
+        return clanCache.getOrDefault(username, "blank");
     }
 
-    public enum Color {
+    public enum ClanType {
         Gold("gold"), // Elder & Noble
         Purple("purple"), // Developer/ CJ
         Blue("blue"), // Knight
@@ -85,11 +118,11 @@ public class Clans extends Module {
         Sync("sync"), // Sync
         Astral("astral"), // Astral
         BSB("bsb"), // BSB
-        ;
+        BLANK("blank");
 
         public final String label;
 
-        Color(String label) {
+        ClanType(String label) {
             this.label = label;
         }
     }

@@ -7,11 +7,11 @@ import com.thnkscj.toolkit.modules.Category;
 import com.thnkscj.toolkit.modules.Module;
 import com.thnkscj.toolkit.setting.settings.BooleanSetting;
 import com.thnkscj.toolkit.setting.settings.DoubleSetting;
-import com.thnkscj.toolkit.setting.settings.EnumSetting;
 import com.thnkscj.toolkit.setting.settings.IntegerSetting;
 import com.thnkscj.toolkit.util.misc.Timer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -21,41 +21,36 @@ public class ElytraFly extends Module {
     public ElytraFly() {
         super("ElytraFly", "Fly with elytra", Category.CLIENT);
 
-        addSettings(speed, step, timerTakeoff, autoJump, timerSpeed);
+        addSettings(speed, step, redeployDelay, boostOnDisable, timerTakeoff, autoJump, timerSpeed);
     }
 
     private static final float MOVE_FRICTION = 4.02f;
-    private static final float MOVE_FAST = 4.31f;
     private static final float LIVING_UPDATE_FRICTION = 3.170326f;
 
-    // for testing speed won't do anything for now
     public static IntegerSetting speed = new IntegerSetting("Speed", "How fast u wanna go", 1, 10, 20);
+    public static DoubleSetting step = new DoubleSetting("Step", "", 1.0, 5.0, 10.0);
+    public static IntegerSetting redeployDelay = new IntegerSetting("RedeployDelay", "Delay for redeploying elytra", 1, 3, 20);
 
-    public static EnumSetting<Base> base = new EnumSetting<>("Base", "Base speed", Base.Normal);
-    public static EnumSetting<Acceleration> acceleration = new EnumSetting<>("Acceleration", "Acceleration mode", Acceleration.Jump);
-    public static DoubleSetting step = new DoubleSetting("Step", "", 0.001, 0.01, 0.05);
-
+    public static BooleanSetting boostOnDisable = new BooleanSetting("BoostOnDisable", "Boost on disable", false);
     public static BooleanSetting timerTakeoff = new BooleanSetting("TimerTakeoff", "Auto takeoff with timer", false);
     public static BooleanSetting autoJump = new BooleanSetting("AutoJump", "Jump automatically when enabling efly", true);
     public static DoubleSetting timerSpeed = new DoubleSetting("TimerSpeed", "The timer speed for takeoff", 0.05, 0.05, 1.0);
 
-    private static long lastOpenElytra = 0L;
     final DecimalFormat formatter = new DecimalFormat("#.#");
     private final Timer timer = new Timer();
-    private double prevPosX;
-    private double prevPosZ;
+    private final Timer takeOffTimer = new Timer();
 
     public boolean tookOff = false;
     private boolean checkTime = false;
-    private final Timer takeOffTimer = new Timer();
 
+    private static long lastOpenElytra = 0L;
     private long ticks = 0;
 
+    private double prevPosX;
+    private double prevPosZ;
     private double prevBPS;
-
     private double fricLiv = LIVING_UPDATE_FRICTION;
     private double fricMove = MOVE_FRICTION;
-
     private double max = 0;
 
     @Override
@@ -74,6 +69,13 @@ public class ElytraFly extends Module {
     @Override
     protected void onDisable() {
         Command.sendMessage("Max Delta: " + max);
+
+        if (!boostOnDisable.isEnabled()) {
+            mc.player.motionX = 0;
+            mc.player.motionY = 0;
+            mc.player.motionZ = 0;
+            mc.timer.tickLength = 50f;
+        }
     }
 
     @Override
@@ -95,25 +97,22 @@ public class ElytraFly extends Module {
             checkTime = true;
         }
 
-        if (tookOff) {
-            if (mc.player.moveForward > 0.0f) {
-                ticks++;
-                if (ticks % 4 == 0) {
-                    fricLiv += step.getValue();
-                    fricMove += step.getValue();
-                }
-            } else {
-                ticks = 0;
-            }
+        if (!mc.world.isBlockLoaded(new BlockPos(mc.player.posX + mc.player.motionX, mc.player.posY, mc.player.posZ + mc.player.motionZ), false)) {
+            mc.player.motionX = 0;
+            mc.player.motionZ = 0;
         }
 
-        if (mc.player.moveForward > 0) {
-            fricLiv += step.getValue();
-            fricMove += step.getValue();
+        if (mc.player.moveForward > 0.0f) {
+            ticks++;
+            if (ticks % 4 == 0 && ticks % 16 != 0) {
+                fricLiv += (step.getValue().floatValue() / 100f);
+                fricMove += (step.getValue().floatValue() / 100f);
+            }
         } else {
-            fricLiv = LIVING_UPDATE_FRICTION;
-            fricMove = MOVE_FRICTION;
+            ticks = 0;
         }
+
+        mc.gameSettings.gammaSetting = 1000f;
     }
 
 
@@ -127,7 +126,6 @@ public class ElytraFly extends Module {
         double BPS = distance * 20;
         double KMH = Math.floor((distance / 1000.0f) / (0.05f / 3600.0f));
 
-        // these need to be put into a pos where i can be seen
         mc.fontRenderer.drawStringWithShadow("Speed: " + this.formatter.format(BPS) + " BPS", 2, 2, 0xffffff);
         mc.fontRenderer.drawStringWithShadow("Speed " + this.formatter.format(KMH) + "km/h", 2, 12, 0xffffff);
         mc.fontRenderer.drawStringWithShadow("Delta: " + this.formatter.format(BPS - prevBPS), 2, 22, 0xffffff);
@@ -165,20 +163,20 @@ public class ElytraFly extends Module {
 
         mc.player.prevRotationPitch = -2.0f;
         mc.player.rotationPitch = -2.0f;
-        if (!mc.player.isElytraFlying() && System.currentTimeMillis() - lastOpenElytra > 2000L) {
+
+        if (!mc.player.isElytraFlying() && System.currentTimeMillis() - lastOpenElytra > redeployDelay.getValue() * 1000) {
+            mc.timer.tickLength = 50f / timerSpeed.getValue().floatValue();
+
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
             lastOpenElytra = System.currentTimeMillis();
+
+            fricLiv = LIVING_UPDATE_FRICTION + 0.05;
+            fricMove = MOVE_FRICTION + 0.05;
         }
-    }
 
-    private enum Base {
-        Zero,
-        Normal,
-        Fast
-    }
-
-    private enum Acceleration {
-        Jump,
-        Smooth
+        // if you want control then comment this out
+        if (mc.player.ticksExisted % 2.5 == 0) {
+            mc.timer.tickLength = 50f;
+        }
     }
 }

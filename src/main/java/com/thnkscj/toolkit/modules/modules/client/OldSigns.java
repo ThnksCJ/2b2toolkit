@@ -6,6 +6,7 @@ import com.thnkscj.toolkit.setting.settings.ColorSetting;
 import com.thnkscj.toolkit.setting.settings.IntegerSetting;
 import com.thnkscj.toolkit.util.render.RenderUtil;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -35,7 +36,7 @@ public class OldSigns extends Module {
             if (tileEntity instanceof TileEntitySign && mc.player.getDistance(tileEntity.getPos().x, tileEntity.getPos().y, tileEntity.getPos().z) <= distance.getValue() && RenderUtil.isTileEntityVisible(tileEntity)) {
                 TileEntitySign sign = (TileEntitySign) tileEntity;
                 if (isOldSignText(sign.getPos())) {
-                    //RenderUtil.outlineBox(new AxisAlignedBB(sign.getPos()), color.getValue(), color.getColor(), 1, 1, 1, 1);
+                    RenderUtil.outlineBox(new AxisAlignedBB(sign.getPos()), color.getValue(), color.getColor(), 1, 1, 1, 1);
                 }
             }
         });
