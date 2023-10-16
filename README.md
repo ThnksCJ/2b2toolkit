@@ -1,0 +1,1 @@
+A private 2b2t hack that me and some friends contributed too, was also used as a testing ground for ideas. its outdated now so i dont see why it should stay private, this repo might not last long as i may delete it not sure yet
